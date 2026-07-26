@@ -38,6 +38,14 @@ Or render directly from the CLI without the web UI (edit `remotion/props/example
 cd remotion && node render.mjs props/example.json out/ad.mp4
 ```
 
+## Sample ad
+
+`demo/` has a runnable end-to-end example - a fictional product ("Nimbus Audio" earbuds) built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music), so it's safe to use as a portfolio/demo piece without depending on any real client's photos or licensed music:
+
+```bash
+cd remotion && node render.mjs ../demo/props.json out/demo.mp4
+```
+
 ## Branding
 
 Before using this for a real product/customer, add your own:
