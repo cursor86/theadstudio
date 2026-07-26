@@ -1,0 +1,15 @@
+{
+  "title": "Grand Opening",
+  "features": ["Grand Opening Weekend", "20% Off Your First Order", "Free Pastry with Any Coffee"],
+  "features2": ["Ethically Sourced Beans", "Roasted Fresh Daily", "Locally Owned & Operated"],
+  "cta": "Visit Us Today",
+  "link": "northboundcoffee.example",
+  "images": [
+    "../demo/business-promo/assets/hero.png",
+    "../demo/business-promo/assets/offer1.png",
+    "../demo/business-promo/assets/offer2.png",
+    "../demo/business-promo/assets/offer3.png"
+  ],
+  "music": "../demo/assets/music.mp3",
+  "logoPath": ""
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Your Car, Showroom Clean",
+  "features": ["We Come To You - Mobile Service", "Interior & Exterior Detailing", "100% Satisfaction Guarantee"],
+  "features2": ["Eco-Friendly Products", "Same-Day Booking Available", "5-Star Rated by 200+ Customers"],
+  "cta": "Book Now",
+  "link": "sparkledetailing.example",
+  "images": [
+    "../demo/service/assets/hero.png",
+    "../demo/service/assets/benefit1.png",
+    "../demo/service/assets/benefit2.png",
+    "../demo/service/assets/benefit3.png"
+  ],
+  "music": "../demo/assets/music.mp3",
+  "logoPath": ""
+}

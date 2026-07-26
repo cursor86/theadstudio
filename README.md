@@ -38,13 +38,17 @@ Or render directly from the CLI without the web UI (edit `remotion/props/example
 cd remotion && node render.mjs props/example.json out/ad.mp4
 ```
 
-## Sample ad
+## Sample ads
 
-`demo/` has a runnable end-to-end example - a fictional product ("Nimbus Audio" earbuds) built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music), so it's safe to use as a portfolio/demo piece without depending on any real client's photos or licensed music:
+`demo/` has three runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music:
 
-```bash
-cd remotion && node render.mjs ../demo/props.json out/demo.mp4
-```
+| Category | Example | Render |
+|---|---|---|
+| Product | Nimbus Audio (fictional earbuds) | `node render.mjs ../demo/props.json out/product.mp4` |
+| Business promotion | Northbound Coffee Co. (fictional grand opening) | `node render.mjs ../demo/business-promo/props.json out/promo.mp4` |
+| Service | Sparkle Detailing (fictional mobile car detailing) | `node render.mjs ../demo/service/props.json out/service.mp4` |
+
+Run each from inside `remotion/`.
 
 ## Branding
 
