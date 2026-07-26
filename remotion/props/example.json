@@ -1,0 +1,9 @@
+{
+  "title": "Your Product Name",
+  "features": ["First key feature", "Second key feature", "Third key feature"],
+  "cta": "Shop Now",
+  "link": "yourstore.com",
+  "images": ["/absolute/path/to/photo1.jpg", "/absolute/path/to/photo2.jpg"],
+  "music": "/absolute/path/to/music.mp3",
+  "logoPath": ""
+}
