@@ -1,6 +1,6 @@
 export const FPS = 30;
-export const WIDTH = 720;
-export const HEIGHT = 1280;
+export const WIDTH = 1080;
+export const HEIGHT = 1920;
 
 export const TITLE_SECONDS = 4;
 export const HERO_SECONDS = 4.5;

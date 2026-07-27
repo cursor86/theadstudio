@@ -19,8 +19,8 @@ export const FeatureBullets: React.FC<{features: string[]}> = ({features}) => {
 					opacity,
 					display: 'flex',
 					flexDirection: 'column',
-					gap: 30,
-					padding: '0 55px',
+					gap: 45,
+					padding: '0 82px',
 				}}
 			>
 				{features.map((feature, i) => (
@@ -30,7 +30,7 @@ export const FeatureBullets: React.FC<{features: string[]}> = ({features}) => {
 							color: GOLD,
 							fontFamily: FONT_FAMILY,
 							fontWeight: 800,
-							fontSize: 42,
+							fontSize: 63,
 							textAlign: 'center',
 						}}
 					>

@@ -17,7 +17,7 @@ export const CtaEnd: React.FC<{cta: string; link: string; logoPath?: string}> = 
 				justifyContent: 'center',
 				alignItems: 'center',
 				flexDirection: 'column',
-				gap: 36,
+				gap: 54,
 				opacity,
 			}}
 		>
@@ -28,9 +28,9 @@ export const CtaEnd: React.FC<{cta: string; link: string; logoPath?: string}> = 
 						color: DARK_PURPLE,
 						fontFamily: FONT_FAMILY,
 						fontWeight: 800,
-						fontSize: 46,
-						padding: '22px 70px',
-						borderRadius: 10,
+						fontSize: 69,
+						padding: '33px 105px',
+						borderRadius: 15,
 					}}
 				>
 					{cta}
@@ -41,14 +41,14 @@ export const CtaEnd: React.FC<{cta: string; link: string; logoPath?: string}> = 
 						color: GOLD,
 						fontFamily: FONT_FAMILY,
 						fontWeight: 700,
-						fontSize: 26,
+						fontSize: 39,
 						textDecoration: 'underline',
-						textUnderlineOffset: 4,
+						textUnderlineOffset: 6,
 					}}>
 					{link}
 				</div>
 			) : null}
-			{logoPath ? <Img src={logoPath} style={{height: 130, marginTop: 10}} /> : null}
+			{logoPath ? <Img src={logoPath} style={{height: 195, marginTop: 15}} /> : null}
 		</AbsoluteFill>
 	);
 };

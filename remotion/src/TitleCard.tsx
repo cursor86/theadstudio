@@ -7,7 +7,7 @@ const INTRO_BG = 'radial-gradient(circle at 50% 38%, #3B2358 0%, #221336 45%, #1
 const SPARKLES = new Array(14).fill(0).map((_, i) => ({
 	left: `${(i * 37 + 8) % 100}%`,
 	top: `${(i * 53 + 12) % 100}%`,
-	size: 3 + (i % 4),
+	size: (3 + (i % 4)) * 1.5,
 	phase: (i * 0.6) % (Math.PI * 2),
 	speed: 0.05 + (i % 3) * 0.02,
 }));
@@ -76,23 +76,23 @@ export const TitleCard: React.FC<{title: string; logoPath?: string}> = ({title, 
 				<div
 					style={{
 						position: 'relative',
-						width: 300,
-						height: 300,
+						width: 450,
+						height: 450,
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'center',
-						perspective: 900,
+						perspective: 1350,
 					}}
 				>
 					<div
 						style={{
 							position: 'absolute',
-							width: 320,
-							height: 320,
+							width: 480,
+							height: 480,
 							borderRadius: '50%',
 							background: 'radial-gradient(circle, rgba(212,175,55,0.55) 0%, rgba(212,175,55,0) 70%)',
 							opacity: glowPulse,
-							filter: 'blur(4px)',
+							filter: 'blur(6px)',
 						}}
 					/>
 					<div
@@ -104,7 +104,7 @@ export const TitleCard: React.FC<{title: string; logoPath?: string}> = ({title, 
 							filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5)) drop-shadow(0 0 26px rgba(212,175,55,0.5))',
 						}}
 					>
-						<Img src={logoPath} style={{height: 210, width: 'auto', display: 'block'}} />
+						<Img src={logoPath} style={{height: 315, width: 'auto', display: 'block'}} />
 						<div
 							style={{
 								position: 'absolute',
@@ -121,16 +121,16 @@ export const TitleCard: React.FC<{title: string; logoPath?: string}> = ({title, 
 
 			<div
 				style={{
-					marginTop: 28,
+					marginTop: 42,
 					opacity: titleOpacity,
 					transform: `translateY(${titleY}px)`,
 					color: 'white',
 					fontFamily: FONT_FAMILY,
 					fontWeight: 800,
-					fontSize: 52,
+					fontSize: 78,
 					textAlign: 'center',
 					lineHeight: 1.25,
-					padding: '0 70px',
+					padding: '0 105px',
 					textShadow: '0 6px 18px rgba(0,0,0,0.45)',
 				}}
 			>
