@@ -9,6 +9,8 @@ import {FeatureBullets} from './FeatureBullets';
 import {CtaEnd} from './CtaEnd';
 import {getAudioDurationSeconds} from './audio-duration';
 import {
+	ABSOLUTE_MAX_DURATION_SECONDS,
+	ABSOLUTE_MIN_DURATION_SECONDS,
 	CTA_SECONDS,
 	FEATURES_SECONDS,
 	FPS,
@@ -16,6 +18,10 @@ import {
 	MAX_DURATION_SECONDS,
 	MIN_DURATION_SECONDS,
 	MIN_PHOTO_SECONDS_EACH,
+	MIN_SCALED_CTA_SECONDS,
+	MIN_SCALED_FEATURES_SECONDS,
+	MIN_SCALED_HERO_SECONDS,
+	MIN_SCALED_TITLE_SECONDS,
 	TITLE_SECONDS,
 	TRANSITION_SECONDS,
 } from './constants';
@@ -35,6 +41,10 @@ export const montageSchema = z.object({
 	images: z.array(z.string()),
 	music: z.string(),
 	logoPath: z.string().optional(),
+	// Explicit total length request (e.g. 15 for a TikTok cut, 60 for a
+	// longer YouTube ad). When omitted, length follows the music track as
+	// before, clamped to [MIN_DURATION_SECONDS, MAX_DURATION_SECONDS].
+	durationSeconds: z.number().optional(),
 	// Injected by calculateMontageMetadata (computed in Node from the actual
 	// audio duration) so the component - which renders in the browser and
 	// can't read the filesystem itself - knows exactly how many frames it has
@@ -50,8 +60,16 @@ const secondsToFrames = (seconds: number) => Math.round(seconds * FPS);
 // Same budgeting approach as the Python backend: reserve frames for the
 // title/features/CTA cards, then fill whatever's left with photos.
 export const calculateMontageMetadata = async ({props}: {props: MontageProps}) => {
-	const audioDuration = props.music ? await getAudioDurationSeconds(props.music) : MIN_DURATION_SECONDS;
-	const totalSeconds = Math.max(MIN_DURATION_SECONDS, Math.min(audioDuration, MAX_DURATION_SECONDS));
+	let totalSeconds: number;
+	if (props.durationSeconds) {
+		totalSeconds = Math.max(
+			ABSOLUTE_MIN_DURATION_SECONDS,
+			Math.min(props.durationSeconds, ABSOLUTE_MAX_DURATION_SECONDS)
+		);
+	} else {
+		const audioDuration = props.music ? await getAudioDurationSeconds(props.music) : MIN_DURATION_SECONDS;
+		totalSeconds = Math.max(MIN_DURATION_SECONDS, Math.min(audioDuration, MAX_DURATION_SECONDS));
+	}
 	const durationInFrames = secondsToFrames(totalSeconds);
 
 	return {durationInFrames, props: {...props, totalFrames: durationInFrames}};
@@ -75,17 +93,28 @@ export const MontageAd: React.FC<MontageProps> = ({
 	logoPath,
 	totalFrames,
 }) => {
-	const heroFrames = heroImage ? secondsToFrames(HERO_SECONDS) : 0;
-	const titleFrames = title ? secondsToFrames(TITLE_SECONDS) : 0;
-	const ctaFrames = secondsToFrames(CTA_SECONDS);
-	const featuresFrames = features.length > 0 ? secondsToFrames(FEATURES_SECONDS) : 0;
-	const features2Frames = features2 && features2.length > 0 ? secondsToFrames(FEATURES_SECONDS) : 0;
-	const transitionFrames = secondsToFrames(TRANSITION_SECONDS);
-	const minPhotoFrames = secondsToFrames(MIN_PHOTO_SECONDS_EACH);
-
 	// Falls back to the max only for the Remotion Studio preview, where
 	// calculateMetadata may not have run yet against real props.
 	const effectiveTotalFrames = totalFrames ?? secondsToFrames(MAX_DURATION_SECONDS);
+	const effectiveTotalSeconds = effectiveTotalFrames / FPS;
+
+	// For short ads (below the original 25s design baseline), shrink the
+	// intro/features/CTA cards proportionally instead of leaving them at
+	// full length and starving the photo section - a 15s ad can't afford a
+	// 4s title card the same way a 30s one can. Longer-than-baseline ads
+	// keep these at their normal length; the extra time just goes to photos.
+	const scale = Math.min(1, effectiveTotalSeconds / MIN_DURATION_SECONDS);
+	const scaled = (base: number, floor: number) => Math.max(floor, base * scale);
+
+	const heroFrames = heroImage ? secondsToFrames(scaled(HERO_SECONDS, MIN_SCALED_HERO_SECONDS)) : 0;
+	const titleFrames = title ? secondsToFrames(scaled(TITLE_SECONDS, MIN_SCALED_TITLE_SECONDS)) : 0;
+	const ctaFrames = secondsToFrames(scaled(CTA_SECONDS, MIN_SCALED_CTA_SECONDS));
+	const featuresFrames =
+		features.length > 0 ? secondsToFrames(scaled(FEATURES_SECONDS, MIN_SCALED_FEATURES_SECONDS)) : 0;
+	const features2Frames =
+		features2 && features2.length > 0 ? secondsToFrames(scaled(FEATURES_SECONDS, MIN_SCALED_FEATURES_SECONDS)) : 0;
+	const transitionFrames = secondsToFrames(TRANSITION_SECONDS);
+	const minPhotoFrames = secondsToFrames(MIN_PHOTO_SECONDS_EACH);
 	const photoBudgetFrames = Math.max(
 		minPhotoFrames,
 		effectiveTotalFrames - heroFrames - titleFrames - ctaFrames - featuresFrames - features2Frames

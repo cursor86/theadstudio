@@ -121,6 +121,17 @@ def generate_montage():
         cta = data.get('cta', '').strip()
         link = data.get('link', '').strip()
 
+        # Optional client-requested total length in seconds (e.g. 15 for a
+        # TikTok cut, 60 for a longer YouTube ad). Left out entirely when not
+        # provided so the Remotion side falls back to its music-driven default.
+        duration_raw = data.get('duration', '').strip()
+        duration_seconds = None
+        if duration_raw:
+            try:
+                duration_seconds = float(duration_raw)
+            except ValueError:
+                return jsonify({'error': f'Invalid duration: {duration_raw}'}), 400
+
         image_files = request.files.getlist('images')
         if not image_files:
             return jsonify({'error': 'No images uploaded'}), 400
@@ -148,16 +159,19 @@ def generate_montage():
 
         output_path = os.path.abspath(f'outputs/montage_{run_id}.mp4')
         props_path = os.path.abspath(f'temp/montage_props_{run_id}.json')
+        props = {
+            'title': title,
+            'features': features,
+            'cta': cta,
+            'link': link,
+            'images': image_paths,
+            'music': music_path,
+            'logoPath': LOGO_PATH if os.path.exists(LOGO_PATH) else '',
+        }
+        if duration_seconds is not None:
+            props['durationSeconds'] = duration_seconds
         with open(props_path, 'w') as f:
-            json.dump({
-                'title': title,
-                'features': features,
-                'cta': cta,
-                'link': link,
-                'images': image_paths,
-                'music': music_path,
-                'logoPath': LOGO_PATH if os.path.exists(LOGO_PATH) else '',
-            }, f)
+            json.dump(props, f)
 
         print("🎬 Rendering montage with Remotion...")
         result = subprocess.run(

@@ -1,6 +1,6 @@
 # The Ad Studio
 
-Turns product photos into ready-to-post short-form ad videos (TikTok / Instagram Reels / YouTube Shorts). Upload photos + copy, get a 25-30 second vertical MP4 back: animated intro, product photo montage, feature callouts, background music, and a branded "Shop Now" CTA.
+Turns product photos into ready-to-post short-form ad videos (TikTok / Instagram Reels / YouTube Shorts). Upload photos + copy, get a vertical MP4 back: animated intro, product photo montage, feature callouts, background music, and a branded "Shop Now" CTA. Length defaults to 25-30s (follows your music track) but can be set explicitly per job - see "Ad length" below.
 
 ## How it works
 
@@ -48,7 +48,11 @@ cd remotion && node render.mjs props/example.json out/ad.mp4
 | Business promotion | Northbound Coffee Co. (fictional grand opening) | `node render.mjs ../demo/business-promo/props.json out/promo.mp4` |
 | Service | Sparkle Detailing (fictional mobile car detailing) | `node render.mjs ../demo/service/props.json out/service.mp4` |
 
-Run each from inside `remotion/`.
+Run each from inside `remotion/`. `demo/props-short.json` is the same Nimbus Audio ad cut to `durationSeconds: 15` - see below.
+
+## Ad length
+
+By default the video's length follows the music track's duration, clamped to 25-30s. To set an exact length instead (e.g. a 15s TikTok cut or a 60s YouTube ad), set `durationSeconds` in the props JSON (or the "Ad Length" field in the web UI, sent as the `duration` form field to `/api/generate-montage`). Valid range is 6-120s. The intro/features/CTA cards automatically shrink (down to a readable floor) for durations below the 25s baseline, so a 15s ad doesn't spend all its time on text cards - the extra room in longer-than-baseline ads goes entirely to more photo time.
 
 ## Branding
 

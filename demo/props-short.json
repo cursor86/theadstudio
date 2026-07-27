@@ -1,0 +1,15 @@
+{
+  "title": "Sound, Untethered",
+  "durationSeconds": 15,
+  "features": ["40-Hour Battery Life", "Active Noise Cancelling", "Crystal Clear Calls"],
+  "cta": "Shop Now",
+  "link": "yourstore.com",
+  "images": [
+    "../demo/assets/hero.png",
+    "../demo/assets/feature1.png",
+    "../demo/assets/feature2.png",
+    "../demo/assets/feature3.png"
+  ],
+  "music": "../demo/assets/music.mp3",
+  "logoPath": ""
+}

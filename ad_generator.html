@@ -69,6 +69,7 @@
             features: '',
             cta: 'Shop Now',
             link: 'yourstore.com',
+            duration: '', // seconds, blank = default (follows music length, 25-30s)
             images: [],
             imagePreviews: [],
             music: null,
@@ -121,6 +122,7 @@
                 formDataObj.append('features', montageData.features);
                 formDataObj.append('cta', montageData.cta);
                 formDataObj.append('link', montageData.link);
+                if (montageData.duration) formDataObj.append('duration', montageData.duration);
 
                 console.log('🚀 Sending montage request to backend...');
 
@@ -479,6 +481,17 @@
                                                 placeholder="e.g., yourstore.com"
                                                 value="${montageData.link}"
                                                 onchange="montageData.link = this.value"
+                                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
+                                            />
+                                        </div>
+
+                                        <!-- Ad Length -->
+                                        <div>
+                                            <label class="block text-sm font-bold mb-2">Ad Length (optional — leave blank to follow your music track, 25-30s)</label>
+                                            <input type="number" min="6" max="120" step="1"
+                                                placeholder="e.g., 15 for a TikTok cut, 60 for a longer ad"
+                                                value="${montageData.duration}"
+                                                onchange="montageData.duration = this.value"
                                                 class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
                                             />
                                         </div>
