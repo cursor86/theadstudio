@@ -10,6 +10,6 @@
     "../demo/service/assets/benefit2.png",
     "../demo/service/assets/benefit3.png"
   ],
-  "music": "../demo/assets/music.mp3",
+  "music": "../demo/service/assets/music.mp3",
   "logoPath": ""
 }
