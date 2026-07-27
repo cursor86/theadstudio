@@ -1,0 +1,14 @@
+{
+  "title": "Your Car, Showroom Clean",
+  "captions": ["Mobile Detailing", "We Come To You", "Interior & Exterior Deep Clean", "5-Star Rated Service"],
+  "cta": "Book Now",
+  "link": "sparkledetailing.example",
+  "images": [
+    "../demo/service/assets/hero.png",
+    "../demo/service/assets/benefit1.png",
+    "../demo/service/assets/benefit2.png",
+    "../demo/service/assets/benefit3.png"
+  ],
+  "music": "../demo/service/assets/music.mp3",
+  "logoPath": ""
+}

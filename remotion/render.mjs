@@ -7,10 +7,12 @@ import {fileURLToPath} from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const [, , propsPath, outputPath] = process.argv;
+const [, , propsPath, outputPath, compositionIdArg] = process.argv;
+const compositionId = compositionIdArg || 'MontageAd';
 
 if (!propsPath || !outputPath) {
-	console.error('Usage: node render.mjs <props.json> <output.mp4>');
+	console.error('Usage: node render.mjs <props.json> <output.mp4> [compositionId]');
+	console.error('  compositionId: MontageAd (default) | KenBurnsAd | GridAd');
 	process.exit(1);
 }
 
@@ -52,10 +54,10 @@ try {
 		entryPoint: path.join(__dirname, 'src', 'index.ts'),
 	});
 
-	console.log('Selecting composition...');
+	console.log(`Selecting composition "${compositionId}"...`);
 	const composition = await selectComposition({
 		serveUrl: bundleLocation,
-		id: 'MontageAd',
+		id: compositionId,
 		inputProps: props,
 		browserExecutable,
 	});
