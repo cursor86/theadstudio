@@ -1,0 +1,10 @@
+[
+	{"name": "nimbus-demo", "props": "../demo/props.json", "composition": "MontageAd", "output": "out/nimbus-demo.mp4"},
+	{"name": "nimbus-kenburns", "props": "../demo/props-kenburns.json", "composition": "KenBurnsAd", "output": "out/nimbus-kenburns.mp4"},
+	{"name": "northbound-coffee-promo", "props": "../demo/business-promo/props.json", "composition": "MontageAd", "output": "out/northbound-coffee-promo.mp4"},
+	{"name": "coffee-listicle", "props": "../demo/business-promo/props-listicle.json", "composition": "ListicleAd", "output": "out/coffee-listicle.mp4"},
+	{"name": "sparkle-detailing-service", "props": "../demo/service/props.json", "composition": "MontageAd", "output": "out/sparkle-detailing-service.mp4"},
+	{"name": "sparkle-grid", "props": "../demo/service/props-grid.json", "composition": "GridAd", "output": "out/sparkle-grid.mp4"},
+	{"name": "sparkle-demotainment", "props": "../demo/service/props-demotainment.json", "composition": "DemoTainmentAd", "output": "out/sparkle-demotainment.mp4"},
+	{"name": "nimbus-testimonial", "props": "../demo/props-testimonial.json", "composition": "TestimonialAd", "output": "out/nimbus-testimonial.mp4"}
+]

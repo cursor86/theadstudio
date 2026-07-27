@@ -38,6 +38,18 @@ Or render directly from the CLI without the web UI (edit `remotion/props/example
 cd remotion && node render.mjs props/example.json out/ad.mp4
 ```
 
+### Batch re-rendering
+
+`remotion/scripts/render-all.sh` renders a whole manifest of jobs in one shot and runs `scripts/check-white-edge.py` (a standalone version of the pixel check used to catch the earlier white-band defect) on every output - no AI involvement needed, so use it directly for repeat/portfolio re-renders instead of asking Claude to drive `render.mjs` one video at a time:
+
+```bash
+cd remotion
+./scripts/render-all.sh                    # renders every job in scripts/jobs.json (the full portfolio)
+./scripts/render-all.sh scripts/foo.json   # or a custom manifest, same format as jobs.json
+```
+
+Manifest entries are `{"name", "props", "composition", "output"}`. Add a new entry (e.g. for a new client job) instead of hand-running `render.mjs` per file.
+
 ## Sample ads
 
 `demo/` has runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music:
