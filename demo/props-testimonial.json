@@ -1,0 +1,12 @@
+{
+  "reviews": [
+    {"quote": "I wear these all day now. Battery life is no joke.", "name": "Alex P.", "rating": 5},
+    {"quote": "Noise cancelling blocks out my entire open office.", "name": "Jordan K.", "rating": 5},
+    {"quote": "Calls sound crystal clear, nobody can tell I'm not in a studio.", "name": "Sam R.", "rating": 5}
+  ],
+  "productImage": "../demo/assets/hero.png",
+  "cta": "Shop Now",
+  "link": "yourstore.com",
+  "music": "../demo/assets/music.mp3",
+  "logoPath": ""
+}

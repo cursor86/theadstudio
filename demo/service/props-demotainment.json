@@ -1,0 +1,13 @@
+{
+  "problem": "Embarrassed to let anyone in your car?",
+  "images": [
+    "../demo/service/assets/benefit1.png",
+    "../demo/service/assets/benefit2.png",
+    "../demo/service/assets/benefit3.png"
+  ],
+  "captions": ["We come to you", "Deep clean, inside & out", "5-star rated"],
+  "cta": "Book Now",
+  "link": "sparkledetailing.example",
+  "music": "../demo/service/assets/music.mp3",
+  "logoPath": ""
+}

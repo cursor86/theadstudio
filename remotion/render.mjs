@@ -12,7 +12,7 @@ const compositionId = compositionIdArg || 'MontageAd';
 
 if (!propsPath || !outputPath) {
 	console.error('Usage: node render.mjs <props.json> <output.mp4> [compositionId]');
-	console.error('  compositionId: MontageAd (default) | KenBurnsAd | GridAd');
+	console.error('  compositionId: MontageAd (default) | KenBurnsAd | GridAd | TestimonialAd | DemoTainmentAd | ListicleAd');
 	process.exit(1);
 }
 
@@ -39,6 +39,12 @@ props.images = (props.images ?? []).map((p, i) => copyIntoPublic(p, `img${i}`));
 props.music = copyIntoPublic(props.music, 'music');
 props.logoPath = props.logoPath ? copyIntoPublic(props.logoPath, 'logo') : '';
 props.heroImage = props.heroImage ? copyIntoPublic(props.heroImage, 'hero') : '';
+props.productImage = props.productImage ? copyIntoPublic(props.productImage, 'product') : '';
+if (Array.isArray(props.items)) {
+	props.items = props.items.map((item, i) =>
+		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item
+	);
+}
 
 const candidateBrowserPaths = [
 	process.env.REMOTION_BROWSER_EXECUTABLE,

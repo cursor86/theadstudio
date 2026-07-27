@@ -1,0 +1,14 @@
+{
+  "title": "5 Reasons To Visit Northbound Coffee",
+  "items": [
+    {"label": "1", "text": "Ethically sourced beans", "image": "../demo/business-promo/assets/offer2.png"},
+    {"label": "2", "text": "Roasted fresh every morning"},
+    {"label": "3", "text": "20% off your first order", "image": "../demo/business-promo/assets/offer1.png"},
+    {"label": "4", "text": "Free pastry with any coffee", "image": "../demo/business-promo/assets/offer3.png"},
+    {"label": "5", "text": "Locally owned & operated"}
+  ],
+  "cta": "Visit Us Today",
+  "link": "northboundcoffee.example",
+  "music": "../demo/business-promo/assets/music.mp3",
+  "logoPath": ""
+}

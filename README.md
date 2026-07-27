@@ -49,16 +49,22 @@ cd remotion && node render.mjs props/example.json out/ad.mp4
 | Business promotion | Northbound Coffee Co. (fictional grand opening) | Montage | `node render.mjs ../demo/business-promo/props.json out/promo.mp4` |
 | Service | Sparkle Detailing (fictional mobile car detailing) | Montage | `node render.mjs ../demo/service/props.json out/service.mp4` |
 | Service | Sparkle Detailing | Grid (2x2 split-screen) | `node render.mjs ../demo/service/props-grid.json out/service-grid.mp4 GridAd` |
+| Service | Sparkle Detailing | Demo-tainment (fast hard cuts) | `node render.mjs ../demo/service/props-demotainment.json out/service-demo.mp4 DemoTainmentAd` |
+| Product | Nimbus Audio | UGC Testimonial (review cards) | `node render.mjs ../demo/props-testimonial.json out/product-testimonial.mp4 TestimonialAd` |
+| Business promotion | Northbound Coffee Co. | Listicle / "Types of" | `node render.mjs ../demo/business-promo/props-listicle.json out/promo-listicle.mp4 ListicleAd` |
 
 Run each from inside `remotion/`. `demo/props-short.json` is the same Nimbus Audio ad cut to `durationSeconds: 15` - see below.
 
 ## Layouts
 
-Three composition styles, picked via the optional third `render.mjs` argument (defaults to `MontageAd`):
+Six composition styles, picked via the optional third `render.mjs` argument (defaults to `MontageAd`):
 
 - **MontageAd** - intro card, then one full-screen photo at a time, feature-bullet cards, CTA. The default, most versatile.
 - **KenBurnsAd** - continuous slow zoom/pan per photo with a persistent lower-third caption bar instead of full-screen text cards - more documentary/organic feel. Props: `hook`, `captions` (one per image), `images`, `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
 - **GridAd** - all photos in a 2x2 grid at once, with one tile "popping" forward per beat synced to a caption - denser, multi-item showcase feel. Props: `title`, `captions` (one per image, up to 4), `images`, `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
+- **TestimonialAd** - "UGC testimonial" styled as review/quote cards (star rating, quote, reviewer name) rather than a talking-head video - this pipeline has no real presenter or AI avatar, so it reads like a screenshotted customer review instead of pretending to be filmed. Props: `reviews` (array of `{quote, name, rating}`), `productImage` (optional), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
+- **DemoTainmentAd** - fast, punchy problem-hook opener into quick demo beats with hard cuts and bouncy spring pop-ins, styled more like a meme/hook-driven TikTok than the calmer layouts above. Props: `problem`, `images`, `captions` (one per image), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
+- **ListicleAd** - covers both "listicle" (5 Reasons You Need This) and "types of" (3 Types of Coffee Lovers) formats with one flexible composition: title card, then one full-screen card per item with a label badge (number or persona name) + text + optional photo, then CTA. Props: `title`, `items` (array of `{label, text, image?}`), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
 
 ## Ad length
 
