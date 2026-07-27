@@ -40,15 +40,25 @@ cd remotion && node render.mjs props/example.json out/ad.mp4
 
 ## Sample ads
 
-`demo/` has three runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music:
+`demo/` has runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music:
 
-| Category | Example | Render |
-|---|---|---|
-| Product | Nimbus Audio (fictional earbuds) | `node render.mjs ../demo/props.json out/product.mp4` |
-| Business promotion | Northbound Coffee Co. (fictional grand opening) | `node render.mjs ../demo/business-promo/props.json out/promo.mp4` |
-| Service | Sparkle Detailing (fictional mobile car detailing) | `node render.mjs ../demo/service/props.json out/service.mp4` |
+| Category | Example | Layout | Render |
+|---|---|---|---|
+| Product | Nimbus Audio (fictional earbuds) | Montage (card-based) | `node render.mjs ../demo/props.json out/product.mp4` |
+| Product | Nimbus Audio | Ken Burns (photo zoom + caption bar) | `node render.mjs ../demo/props-kenburns.json out/product-kb.mp4 KenBurnsAd` |
+| Business promotion | Northbound Coffee Co. (fictional grand opening) | Montage | `node render.mjs ../demo/business-promo/props.json out/promo.mp4` |
+| Service | Sparkle Detailing (fictional mobile car detailing) | Montage | `node render.mjs ../demo/service/props.json out/service.mp4` |
+| Service | Sparkle Detailing | Grid (2x2 split-screen) | `node render.mjs ../demo/service/props-grid.json out/service-grid.mp4 GridAd` |
 
 Run each from inside `remotion/`. `demo/props-short.json` is the same Nimbus Audio ad cut to `durationSeconds: 15` - see below.
+
+## Layouts
+
+Three composition styles, picked via the optional third `render.mjs` argument (defaults to `MontageAd`):
+
+- **MontageAd** - intro card, then one full-screen photo at a time, feature-bullet cards, CTA. The default, most versatile.
+- **KenBurnsAd** - continuous slow zoom/pan per photo with a persistent lower-third caption bar instead of full-screen text cards - more documentary/organic feel. Props: `hook`, `captions` (one per image), `images`, `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
+- **GridAd** - all photos in a 2x2 grid at once, with one tile "popping" forward per beat synced to a caption - denser, multi-item showcase feel. Props: `title`, `captions` (one per image, up to 4), `images`, `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
 
 ## Ad length
 
