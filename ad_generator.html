@@ -64,6 +64,20 @@
         let isGenerating = false;
 
         let adMode = 'classic';
+        let ugcData = {
+            script: '',
+            avatarId: '',
+            voiceId: '',
+            aspectRatio: '9:16',
+            avatars: [],
+            voiceOptions: [],
+            avatarsLoaded: false,
+            avatarsError: null,
+            jobId: null,
+            status: null, // pending | in_queue | running | done | failed
+            videoUrl: null,
+            error: null
+        };
         let montageData = {
             title: '',
             features: '',
@@ -79,6 +93,124 @@
         function switchMode(mode) {
             adMode = mode;
             render();
+            if (mode === 'ugc' && !ugcData.avatarsLoaded) {
+                loadCreatifyPickers();
+            }
+        }
+
+        async function loadCreatifyPickers() {
+            try {
+                const [avatarsRes, voicesRes] = await Promise.all([
+                    fetch(`${API_BASE}/avatars`),
+                    fetch(`${API_BASE}/voices`)
+                ]);
+                const avatars = await avatarsRes.json();
+                const voices = await voicesRes.json();
+
+                if (!avatarsRes.ok) throw new Error(avatars.error || 'Failed to load avatars');
+
+                ugcData.avatars = Array.isArray(avatars) ? avatars : [];
+                ugcData.voiceOptions = voicesRes.ok && Array.isArray(voices)
+                    ? voices.flatMap(v => (v.accents || []).map(a => ({
+                        id: a.id,
+                        label: `${v.name || 'Voice'} - ${a.accent_name || ''}`.trim()
+                    })))
+                    : [];
+                if (ugcData.avatars.length > 0 && !ugcData.avatarId) {
+                    ugcData.avatarId = ugcData.avatars[0].id || ugcData.avatars[0].avatar_id || '';
+                }
+                ugcData.avatarsLoaded = true;
+                ugcData.avatarsError = null;
+            } catch (error) {
+                console.error('❌ Error loading Creatify avatars/voices:', error);
+                ugcData.avatarsLoaded = true;
+                ugcData.avatarsError = error.message;
+            }
+            render();
+        }
+
+        async function generateUgc() {
+            try {
+                if (!ugcData.script.trim()) {
+                    alert('❌ Please write a script for the avatar to speak');
+                    return;
+                }
+                if (!ugcData.avatarId) {
+                    alert('❌ Please choose an avatar');
+                    return;
+                }
+
+                isGenerating = true;
+                ugcData.status = 'pending';
+                ugcData.videoUrl = null;
+                ugcData.error = null;
+                render();
+
+                const formDataObj = new FormData();
+                formDataObj.append('script', ugcData.script);
+                formDataObj.append('avatar_id', ugcData.avatarId);
+                if (ugcData.voiceId) formDataObj.append('voice_id', ugcData.voiceId);
+                formDataObj.append('aspect_ratio', ugcData.aspectRatio);
+
+                const response = await fetch(`${API_BASE}/generate-ugc`, {
+                    method: 'POST',
+                    body: formDataObj
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to start UGC avatar video');
+                }
+
+                ugcData.jobId = result.job_id;
+                ugcData.status = result.status;
+                render();
+                pollUgcStatus();
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                ugcData.error = error.message;
+                ugcData.status = 'failed';
+                isGenerating = false;
+                render();
+            }
+        }
+
+        async function pollUgcStatus() {
+            if (!ugcData.jobId) return;
+            try {
+                const response = await fetch(`${API_BASE}/ugc-status/${ugcData.jobId}`);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to check status');
+                }
+
+                ugcData.status = result.status;
+
+                if (result.status === 'done') {
+                    ugcData.videoUrl = `${BACKEND_ORIGIN}${result.video_url}`;
+                    isGenerating = false;
+                    render();
+                    return;
+                }
+
+                if (result.status === 'failed') {
+                    ugcData.error = result.error || 'Render failed';
+                    isGenerating = false;
+                    render();
+                    return;
+                }
+
+                render();
+                setTimeout(pollUgcStatus, 5000);
+
+            } catch (error) {
+                console.error('❌ Error polling UGC status:', error);
+                ugcData.error = error.message;
+                isGenerating = false;
+                render();
+            }
         }
 
         function handleMontageImagesUpload(e) {
@@ -298,6 +430,9 @@
                                 <button onclick="switchMode('montage')" class="px-6 py-3 rounded-lg font-bold transition ${adMode === 'montage' ? 'bg-purple-600 text-white shadow-lg' : 'bg-white text-gray-600 border-2 border-gray-200'}">
                                     ⚡ UGC Montage
                                 </button>
+                                <button onclick="switchMode('ugc')" class="px-6 py-3 rounded-lg font-bold transition ${adMode === 'ugc' ? 'bg-purple-600 text-white shadow-lg' : 'bg-white text-gray-600 border-2 border-gray-200'}">
+                                    🧑‍🎤 AI Avatar
+                                </button>
                             </div>
 
                             ${adMode === 'classic' ? `
@@ -395,7 +530,7 @@
                                     </div>
                                 </div>
                             </div>
-                            ` : `
+                            ` : adMode === 'montage' ? `
                             <div class="grid md:grid-cols-2 gap-12">
                                 <!-- Montage Form -->
                                 <div class="bg-white p-8 rounded-lg shadow-lg">
@@ -534,6 +669,116 @@
                                             <li>Click Generate</li>
                                             <li>Get a fast-cut, music-synced montage video</li>
                                         </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            ` : `
+                            <div class="grid md:grid-cols-2 gap-12">
+                                <!-- UGC Avatar Form -->
+                                <div class="bg-white p-8 rounded-lg shadow-lg">
+                                    <h2 class="text-2xl font-bold mb-6">AI Avatar Details</h2>
+
+                                    ${ugcData.avatarsError ? `
+                                    <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 text-sm text-red-800">
+                                        <p class="font-bold mb-1">⚠️ Creatify not available</p>
+                                        <p>${ugcData.avatarsError}</p>
+                                        <p class="mt-2">Set <code>CREATIFY_API_ID</code> and <code>CREATIFY_API_KEY</code> on the backend (requires a Creatify Pro plan or higher) and reload.</p>
+                                    </div>
+                                    ` : ''}
+
+                                    <div class="space-y-6">
+                                        <!-- Avatar Picker -->
+                                        <div>
+                                            <label class="block text-sm font-bold mb-2">AI Avatar / Presenter *</label>
+                                            <select
+                                                onchange="ugcData.avatarId = this.value"
+                                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
+                                            >
+                                                ${!ugcData.avatarsLoaded ? `<option>Loading avatars...</option>` : ''}
+                                                ${ugcData.avatarsLoaded && ugcData.avatars.length === 0 ? `<option value="">No avatars available</option>` : ''}
+                                                ${ugcData.avatars.map(a => {
+                                                    const id = a.id || a.avatar_id || '';
+                                                    const label = a.name || id;
+                                                    return `<option value="${id}" ${ugcData.avatarId === id ? 'selected' : ''}>${label}</option>`;
+                                                }).join('')}
+                                            </select>
+                                        </div>
+
+                                        <!-- Voice Picker -->
+                                        <div>
+                                            <label class="block text-sm font-bold mb-2">Voice (optional — defaults to the avatar's own voice)</label>
+                                            <select
+                                                onchange="ugcData.voiceId = this.value"
+                                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
+                                            >
+                                                <option value="">Default voice</option>
+                                                ${ugcData.voiceOptions.map(v => `<option value="${v.id}" ${ugcData.voiceId === v.id ? 'selected' : ''}>${v.label}</option>`).join('')}
+                                            </select>
+                                        </div>
+
+                                        <!-- Script -->
+                                        <div>
+                                            <label class="block text-sm font-bold mb-2">Script * (what the avatar says)</label>
+                                            <textarea
+                                                placeholder="e.g., Okay so I've been using these headphones for two weeks now and honestly? Best purchase this year..."
+                                                rows="6"
+                                                onchange="ugcData.script = this.value"
+                                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none resize-none"
+                                            >${ugcData.script}</textarea>
+                                        </div>
+
+                                        <!-- Aspect Ratio -->
+                                        <div>
+                                            <label class="block text-sm font-bold mb-2">Aspect Ratio</label>
+                                            <select
+                                                onchange="ugcData.aspectRatio = this.value"
+                                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
+                                            >
+                                                <option value="9:16" ${ugcData.aspectRatio === '9:16' ? 'selected' : ''}>9:16 - TikTok / Reels / Shorts</option>
+                                                <option value="1:1" ${ugcData.aspectRatio === '1:1' ? 'selected' : ''}>1:1 - Square</option>
+                                                <option value="16:9" ${ugcData.aspectRatio === '16:9' ? 'selected' : ''}>16:9 - Landscape / YouTube</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Generate Button -->
+                                        <button
+                                            onclick="generateUgc()"
+                                            ${isGenerating ? 'disabled' : ''}
+                                            class="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-lg hover:shadow-lg transition ${isGenerating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}"
+                                        >
+                                            ${isGenerating ? `<div class="flex items-center justify-center gap-2"><div class="spinner"></div>${ugcData.status === 'running' ? 'Rendering avatar video...' : 'Queuing render...'}</div>` : '🧑‍🎤 Generate Avatar Video'}
+                                        </button>
+
+                                        ${ugcData.error ? `<p class="text-red-600 text-sm">❌ ${ugcData.error}</p>` : ''}
+
+                                        ${ugcData.videoUrl ? `
+                                        <a href="${ugcData.videoUrl}" class="block text-center py-3 bg-green-600 text-white font-bold rounded-lg hover:shadow-lg transition">
+                                            ✅ Video ready — Download
+                                        </a>
+                                        ` : ''}
+                                    </div>
+                                </div>
+
+                                <!-- Info -->
+                                <div>
+                                    <h2 class="text-2xl font-bold mb-6">About this mode</h2>
+                                    <div class="preview-box" style="aspect-ratio: 9/16; max-width: 280px; margin: 0 auto;">
+                                        <div class="flex items-center justify-center h-full text-white text-center"><div>
+                                            <div class="text-6xl mb-4">🧑‍🎤</div>
+                                            <p>Real AI-avatar presenter video</p>
+                                        </div></div>
+                                    </div>
+
+                                    <div class="mt-8 bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                                        <h3 class="font-bold text-blue-900 mb-2">📝 How It Works:</h3>
+                                        <ol class="text-sm text-blue-800 space-y-2 list-decimal list-inside">
+                                            <li>Pick an AI avatar and (optionally) a voice</li>
+                                            <li>Write the script it should speak</li>
+                                            <li>Click Generate</li>
+                                            <li>Creatify renders a real talking-avatar video (this can take a few minutes)</li>
+                                            <li>Download once it's done</li>
+                                        </ol>
+                                        <p class="text-xs text-blue-700 mt-4">Unlike Classic and UGC Montage (which composite your own photos), this mode calls out to <a href="https://creatify.ai" class="underline" target="_blank">Creatify</a>'s API to generate an actual AI presenter. Requires a Creatify Pro plan or higher.</p>
                                     </div>
                                 </div>
                             </div>

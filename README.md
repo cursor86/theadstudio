@@ -8,9 +8,10 @@ Turns product photos into ready-to-post short-form ad videos (TikTok / Instagram
 - `ad_generator_backend.py` - Flask API that saves uploads and calls the Remotion renderer
 - `remotion/` - the actual video composition (React components + `render.mjs` render script)
 
-Two modes:
+Three modes:
 - **Classic** (`/api/generate-ad`): one photo, AI voiceover via gTTS, OpenCV/FFmpeg pipeline (fully local, no Remotion needed)
 - **Montage** (`/api/generate-montage`): multiple photos + your own music track, rendered through Remotion (`MontageAd` composition) - this is the richer, animated format
+- **AI Avatar** (`/api/generate-ugc`): a real talking-presenter video via [Creatify](https://creatify.ai)'s avatar API - not a local render, this calls out to Creatify to generate an actual AI avatar speaking your script. See "AI Avatar mode (Creatify)" below for setup. Not to be confused with the `TestimonialAd` Remotion layout (styled as static review cards, no presenter) - this mode is the real thing.
 
 ## Setup
 
@@ -37,6 +38,19 @@ Or render directly from the CLI without the web UI (edit `remotion/props/example
 ```bash
 cd remotion && node render.mjs props/example.json out/ad.mp4
 ```
+
+### AI Avatar mode (Creatify)
+
+The "AI Avatar" mode in the web UI generates a real talking-presenter video instead of compositing your own photos - it calls [Creatify](https://creatify.ai)'s avatar/lipsync API server-side (`creatify_client.py`). It needs its own API credentials and a paid Creatify plan; the rest of the app works fine without it.
+
+```bash
+export CREATIFY_API_ID=your-api-id
+export CREATIFY_API_KEY=your-api-key
+```
+
+Get these from Creatify's Workspace Settings → API (requires a Pro plan or higher). Without them set, `/api/avatars`, `/api/voices`, and `/api/generate-ugc` return a 503 with a message explaining what's missing - everything else in the app is unaffected.
+
+How it works: `/api/generate-ugc` kicks off a Creatify render and returns a `job_id` immediately (renders take a few minutes); the frontend polls `/api/ugc-status/<job_id>` every 5s, and once Creatify reports `done` the backend downloads the finished video into `outputs/` and serves it through the same `/api/download/<filename>` path the other modes use. Creatify bills per render (a few credits per 30s of video) regardless of whether you download the result, so avoid re-submitting the same script/avatar repeatedly.
 
 ### Batch re-rendering
 

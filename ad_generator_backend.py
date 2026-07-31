@@ -8,6 +8,10 @@ import subprocess
 import json
 from pathlib import Path
 import sys
+import requests
+
+import creatify_client
+from creatify_client import CreatifyError, CreatifyNotConfigured
 
 app = Flask(__name__)
 CORS(app)
@@ -197,6 +201,110 @@ def generate_montage():
             'video_url': f'/api/download/{os.path.basename(output_path)}'
         })
 
+    except Exception as e:
+        print(f"❌ Error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+UGC_ASPECT_RATIOS = {'9:16': '9x16', '16:9': '16x9', '1:1': '1x1'}
+
+# Maps a finished Creatify lipsync job id -> the local outputs/ filename it
+# was downloaded to, so repeat status polls don't re-download the video.
+_ugc_downloaded = {}
+
+@app.route('/api/avatars', methods=['GET'])
+def get_avatars():
+    """List the workspace's Creatify AI avatars, for the UGC ad picker."""
+    try:
+        return jsonify(creatify_client.list_avatars())
+    except CreatifyNotConfigured as e:
+        return jsonify({'error': str(e)}), 503
+    except CreatifyError as e:
+        return jsonify({'error': str(e)}), 502
+
+@app.route('/api/voices', methods=['GET'])
+def get_voices():
+    """List available Creatify TTS voices/accents, for the UGC ad picker."""
+    try:
+        return jsonify(creatify_client.list_voices())
+    except CreatifyNotConfigured as e:
+        return jsonify({'error': str(e)}), 503
+    except CreatifyError as e:
+        return jsonify({'error': str(e)}), 502
+
+@app.route('/api/generate-ugc', methods=['POST'])
+def generate_ugc():
+    """Kick off a UGC-style talking-avatar ad via Creatify. Async: returns a
+    job_id immediately: poll /api/ugc-status/<job_id> for progress/output."""
+    try:
+        data = request.form
+        script = data.get('script', '').strip()
+        avatar_id = data.get('avatar_id', '').strip()
+        voice_id = data.get('voice_id', '').strip() or None
+        aspect_ratio = data.get('aspect_ratio', '9:16').strip()
+        name = data.get('name', '').strip() or None
+
+        if not script:
+            return jsonify({'error': 'No script provided'}), 400
+        if not avatar_id:
+            return jsonify({'error': 'No avatar_id provided'}), 400
+
+        creatify_ratio = UGC_ASPECT_RATIOS.get(aspect_ratio, '9x16')
+
+        print(f"🧑‍🎤 Requesting UGC avatar video (avatar={avatar_id}, ratio={creatify_ratio})")
+        task = creatify_client.create_lipsync(
+            script, avatar_id, aspect_ratio=creatify_ratio, name=name, accent=voice_id,
+        )
+        return jsonify({'success': True, 'job_id': task.get('id'), 'status': task.get('status')})
+
+    except CreatifyNotConfigured as e:
+        return jsonify({'error': str(e)}), 503
+    except CreatifyError as e:
+        return jsonify({'error': str(e)}), 502
+    except Exception as e:
+        print(f"❌ Error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/ugc-status/<job_id>', methods=['GET'])
+def ugc_status(job_id):
+    """Poll a Creatify lipsync job. Once done, mirrors the video into
+    outputs/ and returns it through the same /api/download/<filename> path
+    the other ad modes use."""
+    try:
+        task = creatify_client.get_lipsync(job_id)
+        status = task.get('status')
+        result = {'job_id': job_id, 'status': status}
+
+        if status == 'failed':
+            result['error'] = task.get('failed_reason') or 'Render failed'
+            return jsonify(result)
+
+        if status == 'done':
+            if job_id in _ugc_downloaded:
+                result['video_url'] = f'/api/download/{_ugc_downloaded[job_id]}'
+                return jsonify(result)
+
+            output_url = task.get('output')
+            if not output_url:
+                result['error'] = 'Render finished with no output URL'
+                return jsonify(result), 502
+
+            filename = f'ugc_{job_id}.mp4'
+            local_path = os.path.abspath(f'outputs/{filename}')
+            video_resp = requests.get(output_url, timeout=120)
+            video_resp.raise_for_status()
+            with open(local_path, 'wb') as f:
+                f.write(video_resp.content)
+
+            print(f"✅ UGC avatar video downloaded: {local_path}")
+            _ugc_downloaded[job_id] = filename
+            result['video_url'] = f'/api/download/{filename}'
+
+        return jsonify(result)
+
+    except CreatifyNotConfigured as e:
+        return jsonify({'error': str(e)}), 503
+    except CreatifyError as e:
+        return jsonify({'error': str(e)}), 502
     except Exception as e:
         print(f"❌ Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
