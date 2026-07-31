@@ -1,0 +1,6 @@
+torch
+opencv-python-headless>=4.10
+librosa
+scipy
+numba
+tqdm

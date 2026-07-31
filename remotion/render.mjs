@@ -12,7 +12,7 @@ const compositionId = compositionIdArg || 'MontageAd';
 
 if (!propsPath || !outputPath) {
 	console.error('Usage: node render.mjs <props.json> <output.mp4> [compositionId]');
-	console.error('  compositionId: MontageAd (default) | KenBurnsAd | GridAd | TestimonialAd | DemoTainmentAd | ListicleAd');
+	console.error('  compositionId: MontageAd (default) | KenBurnsAd | GridAd | TestimonialAd | DemoTainmentAd | ListicleAd | AvatarUGCAd');
 	process.exit(1);
 }
 
@@ -40,6 +40,15 @@ props.music = copyIntoPublic(props.music, 'music');
 props.logoPath = props.logoPath ? copyIntoPublic(props.logoPath, 'logo') : '';
 props.heroImage = props.heroImage ? copyIntoPublic(props.heroImage, 'hero') : '';
 props.productImage = props.productImage ? copyIntoPublic(props.productImage, 'product') : '';
+props.beats = (props.beats ?? []).map((beat, i) => {
+	if (!beat) return beat;
+	return {
+		...beat,
+		image: beat.image ? copyIntoPublic(beat.image, `beat${i}`) : beat.image,
+		video: beat.video ? copyIntoPublic(beat.video, `beatVideo${i}`) : beat.video,
+	};
+});
+props.voiceover = props.voiceover ? copyIntoPublic(props.voiceover, 'voiceover') : '';
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item

@@ -8,9 +8,10 @@ Turns product photos into ready-to-post short-form ad videos (TikTok / Instagram
 - `ad_generator_backend.py` - Flask API that saves uploads and calls the Remotion renderer
 - `remotion/` - the actual video composition (React components + `render.mjs` render script)
 
-Two modes:
+Three modes:
 - **Classic** (`/api/generate-ad`): one photo, AI voiceover via gTTS, OpenCV/FFmpeg pipeline (fully local, no Remotion needed)
 - **Montage** (`/api/generate-montage`): multiple photos + your own music track, rendered through Remotion (`MontageAd` composition) - this is the richer, animated format
+- **AI Avatar** (`/api/generate-ugc`): a real talking-presenter video via [Creatify](https://creatify.ai)'s avatar API - not a local render, this calls out to Creatify to generate an actual AI avatar speaking your script. See "AI Avatar mode (Creatify)" below for setup. Not to be confused with the `TestimonialAd` Remotion layout (styled as static review cards, no presenter) - this mode is the real thing.
 
 ## Setup
 
@@ -38,6 +39,26 @@ Or render directly from the CLI without the web UI (edit `remotion/props/example
 cd remotion && node render.mjs props/example.json out/ad.mp4
 ```
 
+### AI Avatar mode (Creatify)
+
+The "AI Avatar" mode in the web UI generates a real talking-presenter video instead of compositing your own photos - it calls [Creatify](https://creatify.ai)'s avatar/lipsync API server-side (`creatify_client.py`). It needs its own API credentials and a paid Creatify plan; the rest of the app works fine without it.
+
+```bash
+export CREATIFY_API_ID=your-api-id
+export CREATIFY_API_KEY=your-api-key
+```
+
+Get these from Creatify's Workspace Settings → API (requires a Pro plan or higher). Without them set, `/api/avatars`, `/api/voices`, and `/api/generate-ugc` return a 503 with a message explaining what's missing - everything else in the app is unaffected.
+
+How it works: `/api/generate-ugc` kicks off a Creatify render and returns a `job_id` immediately (renders take a few minutes); the frontend polls `/api/ugc-status/<job_id>` every 5s, and once Creatify reports `done` the backend downloads the finished video into `outputs/` and serves it through the same `/api/download/<filename>` path the other modes use. Creatify bills per render (a few credits per 30s of video) regardless of whether you download the result, so avoid re-submitting the same script/avatar repeatedly.
+
+Tests for this integration (`tests/test_creatify_client.py`, `tests/test_ugc_endpoints.py`) mock every Creatify HTTP call, so they run without an API key:
+
+```bash
+pip install -r requirements-dev.txt
+pytest tests/
+```
+
 ### Batch re-rendering
 
 `remotion/scripts/render-all.sh` renders a whole manifest of jobs in one shot and runs `scripts/check-white-edge.py` (a standalone version of the pixel check used to catch the earlier white-band defect) on every output - no AI involvement needed, so use it directly for repeat/portfolio re-renders instead of asking Claude to drive `render.mjs` one video at a time:
@@ -52,7 +73,7 @@ Manifest entries are `{"name", "props", "composition", "output"}`. Add a new ent
 
 ## Sample ads
 
-`demo/` has runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music:
+`demo/` has runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music. The exception is `avatar-ugc/`, which by nature needs an actual presenter: it uses two real photos of the same person (rights-cleared for this demo) instead of a generated mockup, and its lip-synced clips were generated with Wav2Lip (personal/non-commercial license - see `remotion/scripts/lipsync_wav2lip/README.md`) - swap in your own photos/voice before reusing any of this for a real client.
 
 | Category | Example | Layout | Render |
 |---|---|---|---|
@@ -64,12 +85,13 @@ Manifest entries are `{"name", "props", "composition", "output"}`. Add a new ent
 | Service | Sparkle Detailing | Demo-tainment (fast hard cuts) | `node render.mjs ../demo/service/props-demotainment.json out/service-demo.mp4 DemoTainmentAd` |
 | Product | Nimbus Audio | UGC Testimonial (review cards) | `node render.mjs ../demo/props-testimonial.json out/product-testimonial.mp4 TestimonialAd` |
 | Business promotion | Northbound Coffee Co. | Listicle / "Types of" | `node render.mjs ../demo/business-promo/props-listicle.json out/promo-listicle.mp4 ListicleAd` |
+| Product | Nimbus Audio | UGC Avatar (real presenter photos, real voiceover, free lip-sync on 2 beats) | `node render.mjs ../demo/avatar-ugc/props.json out/avatar-ugc.mp4 AvatarUGCAd` |
 
 Run each from inside `remotion/`. `demo/props-short.json` is the same Nimbus Audio ad cut to `durationSeconds: 15` - see below.
 
 ## Layouts
 
-Six composition styles, picked via the optional third `render.mjs` argument (defaults to `MontageAd`):
+Seven composition styles, picked via the optional third `render.mjs` argument (defaults to `MontageAd`):
 
 - **MontageAd** - intro card, then one full-screen photo at a time, feature-bullet cards, CTA. The default, most versatile.
 - **KenBurnsAd** - continuous slow zoom/pan per photo with a persistent lower-third caption bar instead of full-screen text cards - more documentary/organic feel. Props: `hook`, `captions` (one per image), `images`, `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
@@ -77,6 +99,28 @@ Six composition styles, picked via the optional third `render.mjs` argument (def
 - **TestimonialAd** - "UGC testimonial" styled as review/quote cards (star rating, quote, reviewer name) rather than a talking-head video - this pipeline has no real presenter or AI avatar, so it reads like a screenshotted customer review instead of pretending to be filmed. Props: `reviews` (array of `{quote, name, rating}`), `productImage` (optional), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
 - **DemoTainmentAd** - fast, punchy problem-hook opener into quick demo beats with hard cuts and bouncy spring pop-ins, styled more like a meme/hook-driven TikTok than the calmer layouts above. Props: `problem`, `images`, `captions` (one per image), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
 - **ListicleAd** - covers both "listicle" (5 Reasons You Need This) and "types of" (3 Types of Coffee Lovers) formats with one flexible composition: title card, then one full-screen card per item with a label badge (number or persona name) + text + optional photo, then CTA. Props: `title`, `items` (array of `{label, text, image?}`), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
+- **AvatarUGCAd** - a real talking-presenter ad built from an ordered list of `beats`, each pairing one image with the exact line spoken over it: real presenter photos (`kind: "avatar"`, shows a "speaking" bar indicator) interleaved with supporting product cutaways (`kind: "feature"`, no speaking indicator) so the visual always matches the specific claim being made - the way a real edited UGC video cuts to B-roll while the voiceover continues. A real spoken voiceover plays under it, generated 100% free/local (see below). By default this isn't lip-synced (same honesty as `TestimonialAd` - a real voice plays under a real photo, mouth doesn't move), but a beat can optionally set `video` to a pre-rendered lip-synced clip instead of a static `image` - see "Free lip-sync" below (non-commercial use only). Props: `beats` (array of `{image?, video?, caption, kind?, durationSeconds?}` - use 1+), `voiceover` (audio file - the presenter's actual voice), `music` (optional, mixed low under the voiceover), `cta`, `link`, `logoPath`, `durationSeconds`. Total duration follows the voiceover's own length by default, not a music track; a beat's `durationSeconds` (when set) sizes it exactly - `demo/avatar-ugc/props.json` matches each beat's duration to its own voiceover line so cuts land exactly on the words.
+
+### Free lip-sync (optional, non-commercial only)
+
+`remotion/scripts/lipsync_wav2lip/` adds real audio-driven mouth movement to an `AvatarUGCAd` beat using [Wav2Lip](https://github.com/Rudrabha/Wav2Lip) - free, no API key, CPU-only inference (~10-20s per second of audio). **Wav2Lip's license is personal/research/non-commercial use only** - see that directory's README before using this for an actual client's ad; for commercial lip-sync, use the paid Creatify "AI Avatar" mode instead (`/api/generate-ugc` in the web UI). `demo/avatar-ugc/assets/avatar-real-1-lipsync.mp4` and `avatar-real-2-lipsync.mp4` were generated this way and carry the same restriction.
+
+### Free voiceover generation (no paid API)
+
+`remotion/scripts/generate_voiceover.py` turns a script into an `AvatarUGCAd`-ready MP3 with no API key and no per-render cost, trying engines in quality order and falling back automatically:
+
+1. **gTTS** - free, best default quality, needs internet (uses Google Translate's TTS endpoint)
+2. **Piper TTS** - free, offline neural voice, needs a one-time ~63MB model download (`./scripts/download_piper_voice.sh`, pulls a GitHub-hosted mirror of Piper's `en_US-amy-medium` voice - no account, no Hugging Face needed)
+3. **espeak-ng** - free, offline, always available (`apt install espeak-ng`), robotic quality - last-resort fallback only
+
+```bash
+cd remotion
+pip install -r scripts/requirements.txt   # adds piper-tts on top of the root requirements
+./scripts/download_piper_voice.sh         # one-time, for the offline fallback
+python3 scripts/generate_voiceover.py "Your UGC script here" ../demo/avatar-ugc/assets/voiceover.mp3
+```
+
+Pass `--engine piper` (or `gtts`/`espeak`) to force a specific engine instead of auto-fallback - useful on a network that blocks gTTS. This has nothing to do with the paid "AI Avatar" mode in the web UI (`/api/generate-ugc`, backed by Creatify) - that one renders a real lip-synced avatar video and needs a Creatify Pro plan; this composition is the free alternative when a static portrait + real voiceover + captions is enough.
 
 ## Ad length
 

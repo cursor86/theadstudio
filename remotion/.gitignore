@@ -1,3 +1,5 @@
 node_modules/
 public/render-assets/
 out/
+assets/piper-voices/
+scripts/lipsync_wav2lip/Wav2Lip/
