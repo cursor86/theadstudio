@@ -140,8 +140,10 @@ export const RemotionRoot: React.FC = () => {
 				height={HEIGHT}
 				schema={avatarUGCSchema}
 				defaultProps={{
-					avatarImages: [],
-					captions: ['First line', 'Second line'],
+					beats: [
+						{image: '', caption: 'First line', kind: 'avatar'},
+						{image: '', caption: 'Second line', kind: 'feature'},
+					],
 					voiceover: '',
 					music: '',
 					cta: 'Shop Now',

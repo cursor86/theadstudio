@@ -1,11 +1,31 @@
 {
-  "avatarImages": [
-    "../demo/avatar-ugc/assets/avatar-real-1.jpg",
-    "../demo/avatar-ugc/assets/avatar-real-2.jpg"
-  ],
-  "captions": [
-    "Okay, I have to be honest about my Nimbus Audio earbuds — thirty-hour battery, I forget these need charging.",
-    "Noise cancelling is incredible on every flight. If you're on the fence, just get them."
+  "beats": [
+    {
+      "image": "../demo/avatar-ugc/assets/avatar-real-1.jpg",
+      "video": "../demo/avatar-ugc/assets/avatar-real-1-lipsync.mp4",
+      "caption": "Okay, I have to be honest about my Nimbus Audio earbuds.",
+      "kind": "avatar",
+      "durationSeconds": 4.31
+    },
+    {
+      "image": "../demo/assets/feature1.png",
+      "caption": "Forty-hour battery — I forget these need charging.",
+      "kind": "feature",
+      "durationSeconds": 3.76
+    },
+    {
+      "image": "../demo/avatar-ugc/assets/avatar-real-2.jpg",
+      "video": "../demo/avatar-ugc/assets/avatar-real-2-lipsync.mp4",
+      "caption": "Noise cancelling is incredible on every flight.",
+      "kind": "avatar",
+      "durationSeconds": 3.27
+    },
+    {
+      "image": "../demo/assets/feature2.png",
+      "caption": "If you're on the fence, just get them.",
+      "kind": "feature",
+      "durationSeconds": 2.59
+    }
   ],
   "voiceover": "../demo/avatar-ugc/assets/voiceover.mp3",
   "music": "../demo/assets/music.mp3",
