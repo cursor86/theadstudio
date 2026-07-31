@@ -52,6 +52,13 @@ Get these from Creatify's Workspace Settings → API (requires a Pro plan or hig
 
 How it works: `/api/generate-ugc` kicks off a Creatify render and returns a `job_id` immediately (renders take a few minutes); the frontend polls `/api/ugc-status/<job_id>` every 5s, and once Creatify reports `done` the backend downloads the finished video into `outputs/` and serves it through the same `/api/download/<filename>` path the other modes use. Creatify bills per render (a few credits per 30s of video) regardless of whether you download the result, so avoid re-submitting the same script/avatar repeatedly.
 
+Tests for this integration (`tests/test_creatify_client.py`, `tests/test_ugc_endpoints.py`) mock every Creatify HTTP call, so they run without an API key:
+
+```bash
+pip install -r requirements-dev.txt
+pytest tests/
+```
+
 ### Batch re-rendering
 
 `remotion/scripts/render-all.sh` renders a whole manifest of jobs in one shot and runs `scripts/check-white-edge.py` (a standalone version of the pixel check used to catch the earlier white-band defect) on every output - no AI involvement needed, so use it directly for repeat/portfolio re-renders instead of asking Claude to drive `render.mjs` one video at a time:
