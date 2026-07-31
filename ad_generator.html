@@ -66,6 +66,9 @@
         let adMode = 'classic';
         let ugcData = {
             script: '',
+            scriptTitle: '',
+            scriptFeatures: '',
+            scriptCta: '',
             avatarId: '',
             voiceId: '',
             aspectRatio: '9:16',
@@ -126,6 +129,25 @@
                 ugcData.avatarsLoaded = true;
                 ugcData.avatarsError = error.message;
             }
+            render();
+        }
+
+        function generateUgcScript() {
+            const title = ugcData.scriptTitle.trim();
+            const features = ugcData.scriptFeatures.split(',').map(f => f.trim()).filter(Boolean).slice(0, 3);
+            const cta = ugcData.scriptCta.trim();
+
+            if (!title && features.length === 0) {
+                alert('❌ Add a product name or a few features first');
+                return;
+            }
+
+            let script = '';
+            if (title) script += `Okay so I have to talk about ${title} for a second. `;
+            if (features.length > 0) script += `Honestly my favorite things about it: ${features.join(', ')}. `;
+            script += `If you've been on the fence, ${cta || 'check it out'} — you will not regret it.`;
+
+            ugcData.script = script;
             render();
         }
 
@@ -690,18 +712,25 @@
                                         <!-- Avatar Picker -->
                                         <div>
                                             <label class="block text-sm font-bold mb-2">AI Avatar / Presenter *</label>
-                                            <select
-                                                onchange="ugcData.avatarId = this.value"
-                                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none"
-                                            >
-                                                ${!ugcData.avatarsLoaded ? `<option>Loading avatars...</option>` : ''}
-                                                ${ugcData.avatarsLoaded && ugcData.avatars.length === 0 ? `<option value="">No avatars available</option>` : ''}
+                                            ${!ugcData.avatarsLoaded ? `<p class="text-sm text-gray-500">Loading avatars...</p>` : ''}
+                                            ${ugcData.avatarsLoaded && ugcData.avatars.length === 0 && !ugcData.avatarsError ? `<p class="text-sm text-gray-500">No avatars available in this workspace.</p>` : ''}
+                                            <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-72 overflow-y-auto pr-1">
                                                 ${ugcData.avatars.map(a => {
                                                     const id = a.id || a.avatar_id || '';
                                                     const label = a.name || id;
-                                                    return `<option value="${id}" ${ugcData.avatarId === id ? 'selected' : ''}>${label}</option>`;
+                                                    const thumb = a.preview_image || a.thumbnail_url || a.image_url || '';
+                                                    const selected = ugcData.avatarId === id;
+                                                    return `
+                                                    <button type="button" onclick="ugcData.avatarId = '${id}'; render();"
+                                                        class="rounded-lg border-2 overflow-hidden text-left transition ${selected ? 'border-purple-600 ring-2 ring-purple-300' : 'border-gray-200 hover:border-purple-300'}">
+                                                        <div class="aspect-square bg-gray-100 flex items-center justify-center">
+                                                            ${thumb ? `<img src="${thumb}" class="w-full h-full object-cover" />` : `<span class="text-2xl">🧑</span>`}
+                                                        </div>
+                                                        <p class="text-xs font-semibold px-2 py-1 truncate">${label}</p>
+                                                    </button>
+                                                    `;
                                                 }).join('')}
-                                            </select>
+                                            </div>
                                         </div>
 
                                         <!-- Voice Picker -->
@@ -714,6 +743,29 @@
                                                 <option value="">Default voice</option>
                                                 ${ugcData.voiceOptions.map(v => `<option value="${v.id}" ${ugcData.voiceId === v.id ? 'selected' : ''}>${v.label}</option>`).join('')}
                                             </select>
+                                        </div>
+
+                                        <!-- Auto-generate script -->
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <p class="text-sm font-bold mb-3">✍️ Don't want to write it? Generate a starting script from product details:</p>
+                                            <div class="space-y-2">
+                                                <input type="text" placeholder="Product name"
+                                                    value="${ugcData.scriptTitle}"
+                                                    onchange="ugcData.scriptTitle = this.value"
+                                                    class="w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none" />
+                                                <input type="text" placeholder="Key features (comma separated)"
+                                                    value="${ugcData.scriptFeatures}"
+                                                    onchange="ugcData.scriptFeatures = this.value"
+                                                    class="w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none" />
+                                                <input type="text" placeholder="Call to action (e.g., grab yours today)"
+                                                    value="${ugcData.scriptCta}"
+                                                    onchange="ugcData.scriptCta = this.value"
+                                                    class="w-full px-3 py-2 text-sm border-2 border-gray-300 rounded-lg focus:border-purple-500 outline-none" />
+                                                <button type="button" onclick="generateUgcScript()"
+                                                    class="w-full py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold rounded-lg transition">
+                                                    Generate Script
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <!-- Script -->
