@@ -73,7 +73,7 @@ Manifest entries are `{"name", "props", "composition", "output"}`. Add a new ent
 
 ## Sample ads
 
-`demo/` has runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music:
+`demo/` has runnable end-to-end examples covering the main ad categories, each built entirely from generated assets (HTML mockup cards screenshotted with headless Chromium, synthesized background music) - safe to use as portfolio/demo pieces without depending on any real client's photos or licensed music. The exception is `avatar-ugc/`, which by nature needs an actual presenter: it uses two real photos of the same person (rights-cleared for this demo) instead of a generated mockup - swap in your own before reusing it for a real client.
 
 | Category | Example | Layout | Render |
 |---|---|---|---|
@@ -85,7 +85,7 @@ Manifest entries are `{"name", "props", "composition", "output"}`. Add a new ent
 | Service | Sparkle Detailing | Demo-tainment (fast hard cuts) | `node render.mjs ../demo/service/props-demotainment.json out/service-demo.mp4 DemoTainmentAd` |
 | Product | Nimbus Audio | UGC Testimonial (review cards) | `node render.mjs ../demo/props-testimonial.json out/product-testimonial.mp4 TestimonialAd` |
 | Business promotion | Northbound Coffee Co. | Listicle / "Types of" | `node render.mjs ../demo/business-promo/props-listicle.json out/promo-listicle.mp4 ListicleAd` |
-| Product | Nimbus Audio | UGC Avatar (talking presenter + real voiceover, 100% free/local) | `node render.mjs ../demo/avatar-ugc/props.json out/avatar-ugc.mp4 AvatarUGCAd` |
+| Product | Nimbus Audio | UGC Avatar (real presenter photos + real voiceover, 100% free/local) | `node render.mjs ../demo/avatar-ugc/props.json out/avatar-ugc.mp4 AvatarUGCAd` |
 
 Run each from inside `remotion/`. `demo/props-short.json` is the same Nimbus Audio ad cut to `durationSeconds: 15` - see below.
 
@@ -99,7 +99,7 @@ Seven composition styles, picked via the optional third `render.mjs` argument (d
 - **TestimonialAd** - "UGC testimonial" styled as review/quote cards (star rating, quote, reviewer name) rather than a talking-head video - this pipeline has no real presenter or AI avatar, so it reads like a screenshotted customer review instead of pretending to be filmed. Props: `reviews` (array of `{quote, name, rating}`), `productImage` (optional), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
 - **DemoTainmentAd** - fast, punchy problem-hook opener into quick demo beats with hard cuts and bouncy spring pop-ins, styled more like a meme/hook-driven TikTok than the calmer layouts above. Props: `problem`, `images`, `captions` (one per image), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
 - **ListicleAd** - covers both "listicle" (5 Reasons You Need This) and "types of" (3 Types of Coffee Lovers) formats with one flexible composition: title card, then one full-screen card per item with a label badge (number or persona name) + text + optional photo, then CTA. Props: `title`, `items` (array of `{label, text, image?}`), `cta`, `link`, `music`, `logoPath`, `durationSeconds`.
-- **AvatarUGCAd** - a real talking-presenter ad: one avatar portrait held on screen for a real voiceover track, with synced lower-third captions and a "speaking" bar indicator - not lip-synced video (this pipeline has no AI avatar renderer, same honesty as `TestimonialAd`), but a real spoken voiceover plays under it, generated 100% free/local (see below). Props: `avatarImage`, `avatarBlinkImage` (optional, crossfades in for a blink), `captions` (spoken-line captions, evenly synced across the voiceover), `voiceover` (audio file - the presenter's actual voice), `music` (optional, mixed low under the voiceover), `cta`, `link`, `logoPath`, `durationSeconds`. Duration follows the voiceover's own length by default, not a music track.
+- **AvatarUGCAd** - a real talking-presenter ad: real photos of an actual presenter (not a rendered/illustrated avatar - use your own photos, or a model/stock photo you have the rights to use), cut between one per caption beat like a real multi-shot UGC video, with synced lower-third captions and a "speaking" bar indicator. Not lip-synced video (this pipeline has no AI avatar renderer, same honesty as `TestimonialAd`), but a real spoken voiceover plays under real photos, generated 100% free/local (see below) - one photo works fine too, it just holds on screen for the whole voiceover instead of cutting. Props: `avatarImages` (array, one photo per caption beat - use 1+), `captions` (one per `avatarImages` entry), `voiceover` (audio file - the presenter's actual voice), `music` (optional, mixed low under the voiceover), `cta`, `link`, `logoPath`, `durationSeconds`. Duration follows the voiceover's own length by default, not a music track.
 
 ### Free voiceover generation (no paid API)
 

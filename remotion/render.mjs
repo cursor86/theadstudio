@@ -40,8 +40,7 @@ props.music = copyIntoPublic(props.music, 'music');
 props.logoPath = props.logoPath ? copyIntoPublic(props.logoPath, 'logo') : '';
 props.heroImage = props.heroImage ? copyIntoPublic(props.heroImage, 'hero') : '';
 props.productImage = props.productImage ? copyIntoPublic(props.productImage, 'product') : '';
-props.avatarImage = props.avatarImage ? copyIntoPublic(props.avatarImage, 'avatar') : '';
-props.avatarBlinkImage = props.avatarBlinkImage ? copyIntoPublic(props.avatarBlinkImage, 'avatarBlink') : '';
+props.avatarImages = (props.avatarImages ?? []).map((p, i) => copyIntoPublic(p, `avatar${i}`));
 props.voiceover = props.voiceover ? copyIntoPublic(props.voiceover, 'voiceover') : '';
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
