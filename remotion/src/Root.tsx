@@ -6,6 +6,7 @@ import {GridAd, calculateGridMetadata, gridSchema} from './GridAd';
 import {TestimonialAd, calculateTestimonialMetadata, testimonialSchema} from './TestimonialAd';
 import {DemoTainmentAd, calculateDemoTainmentMetadata, demoTainmentSchema} from './DemoTainmentAd';
 import {ListicleAd, calculateListicleMetadata, listicleSchema} from './ListicleAd';
+import {AvatarUGCAd, calculateAvatarUGCMetadata, avatarUGCSchema} from './AvatarUGCAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -129,6 +130,26 @@ export const RemotionRoot: React.FC = () => {
 					logoPath: '',
 				}}
 				calculateMetadata={calculateListicleMetadata}
+			/>
+			<Composition
+				id="AvatarUGCAd"
+				component={AvatarUGCAd}
+				durationInFrames={30 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={avatarUGCSchema}
+				defaultProps={{
+					avatarImage: '',
+					avatarBlinkImage: '',
+					captions: ['First line', 'Second line', 'Third line'],
+					voiceover: '',
+					music: '',
+					cta: 'Shop Now',
+					link: 'yourstore.com',
+					logoPath: '',
+				}}
+				calculateMetadata={calculateAvatarUGCMetadata}
 			/>
 		</>
 	);

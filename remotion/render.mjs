@@ -12,7 +12,7 @@ const compositionId = compositionIdArg || 'MontageAd';
 
 if (!propsPath || !outputPath) {
 	console.error('Usage: node render.mjs <props.json> <output.mp4> [compositionId]');
-	console.error('  compositionId: MontageAd (default) | KenBurnsAd | GridAd | TestimonialAd | DemoTainmentAd | ListicleAd');
+	console.error('  compositionId: MontageAd (default) | KenBurnsAd | GridAd | TestimonialAd | DemoTainmentAd | ListicleAd | AvatarUGCAd');
 	process.exit(1);
 }
 
@@ -40,6 +40,9 @@ props.music = copyIntoPublic(props.music, 'music');
 props.logoPath = props.logoPath ? copyIntoPublic(props.logoPath, 'logo') : '';
 props.heroImage = props.heroImage ? copyIntoPublic(props.heroImage, 'hero') : '';
 props.productImage = props.productImage ? copyIntoPublic(props.productImage, 'product') : '';
+props.avatarImage = props.avatarImage ? copyIntoPublic(props.avatarImage, 'avatar') : '';
+props.avatarBlinkImage = props.avatarBlinkImage ? copyIntoPublic(props.avatarBlinkImage, 'avatarBlink') : '';
+props.voiceover = props.voiceover ? copyIntoPublic(props.voiceover, 'voiceover') : '';
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item

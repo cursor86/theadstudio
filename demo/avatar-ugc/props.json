@@ -1,0 +1,15 @@
+{
+  "avatarImage": "../demo/avatar-ugc/assets/avatar-open.png",
+  "avatarBlinkImage": "../demo/avatar-ugc/assets/avatar-closed.png",
+  "captions": [
+    "Okay, I have to talk about my Nimbus Audio earbuds.",
+    "Thirty-hour battery — I forget these need charging.",
+    "Noise cancelling is incredible on every flight.",
+    "If you're on the fence, just get them."
+  ],
+  "voiceover": "../demo/avatar-ugc/assets/voiceover.mp3",
+  "music": "../demo/assets/music.mp3",
+  "cta": "Shop Now",
+  "link": "yourstore.com",
+  "logoPath": ""
+}
