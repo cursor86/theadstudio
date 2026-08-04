@@ -150,7 +150,7 @@ export const RemotionRoot: React.FC = () => {
 						{text: 'No editing. No monthly fee. No learning curve. Just the ad.', tone: 'punch'},
 					],
 					cta: "Let's Make Your First Ad — Free",
-					link: 'theadzstudio.example',
+					link: 'theadzstudio@gmail.com',
 					music: '',
 				}}
 				calculateMetadata={calculateStoryMetadata}
