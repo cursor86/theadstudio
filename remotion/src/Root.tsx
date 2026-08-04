@@ -6,6 +6,7 @@ import {GridAd, calculateGridMetadata, gridSchema} from './GridAd';
 import {TestimonialAd, calculateTestimonialMetadata, testimonialSchema} from './TestimonialAd';
 import {DemoTainmentAd, calculateDemoTainmentMetadata, demoTainmentSchema} from './DemoTainmentAd';
 import {ListicleAd, calculateListicleMetadata, listicleSchema} from './ListicleAd';
+import {StoryAd, calculateStoryMetadata, storySchema} from './StoryAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -129,6 +130,30 @@ export const RemotionRoot: React.FC = () => {
 					logoPath: '',
 				}}
 				calculateMetadata={calculateListicleMetadata}
+			/>
+			<Composition
+				id="StoryAd"
+				component={StoryAd}
+				durationInFrames={25 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={storySchema}
+				defaultProps={{
+					brand: 'theadzstudio',
+					tagline: 'Creative Digital Solutions',
+					lines: [
+						{text: "Every AI ad tool wants $100s a month and a tutorial just to get started.", tone: 'problem'},
+						{text: "Startups don't have time for that. They need the ad, not the software.", tone: 'problem'},
+						{text: 'theadzstudio: drop in a few product photos —', tone: 'solution'},
+						{text: '— get back a high-converting Reel-ready video ad. Same day.', tone: 'solution'},
+						{text: 'No editing. No monthly fee. No learning curve. Just the ad.', tone: 'punch'},
+					],
+					cta: "Let's Make Your First Ad — Free",
+					link: 'theadzstudio.example',
+					music: '',
+				}}
+				calculateMetadata={calculateStoryMetadata}
 			/>
 		</>
 	);
