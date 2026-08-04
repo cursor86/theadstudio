@@ -1,0 +1,14 @@
+{
+  "title": "5 Kids Gifts They'll Actually Love",
+  "items": [
+    {"label": "1", "text": "Sensory Pop Toy — perfect for little hands", "image": "/absolute/path/img1.webp"},
+    {"label": "2", "text": "4G/5G Kids Smart Watch — GPS tracking & SOS", "image": "/absolute/path/img2.png"},
+    {"label": "3", "text": "Spider-Man Insulated Bottle — keeps drinks cold", "image": "/absolute/path/img3.png"},
+    {"label": "4", "text": "Visual Timer — the nemesis of procrastination", "image": "/absolute/path/img4.webp"},
+    {"label": "5", "text": "Spider-Man Funko Pop — display-worthy collectible", "image": "/absolute/path/img5.webp"}
+  ],
+  "cta": "Shop Now",
+  "link": "yourstore.example",
+  "music": "/absolute/path/to/music.mp3",
+  "logoPath": ""
+}
