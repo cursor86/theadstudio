@@ -8,6 +8,7 @@ import {DemoTainmentAd, calculateDemoTainmentMetadata, demoTainmentSchema} from 
 import {ListicleAd, calculateListicleMetadata, listicleSchema} from './ListicleAd';
 import {StoryAd, calculateStoryMetadata, storySchema} from './StoryAd';
 import {BuildUpAd, calculateBuildUpMetadata, buildUpSchema} from './BuildUpAd';
+import {ArtisanStoryAd, calculateArtisanStoryMetadata, artisanStorySchema} from './ArtisanStoryAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -172,6 +173,27 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateBuildUpMetadata}
+			/>
+			<Composition
+				id="ArtisanStoryAd"
+				component={ArtisanStoryAd}
+				durationInFrames={28 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={artisanStorySchema}
+				defaultProps={{
+					logoPath: '',
+					brand: 'Your Studio Name',
+					about: ['The Makers', 'Full-time artisans making small-batch work'],
+					inspiration: 'Inspired by nature and handed down craft.',
+					images: [],
+					captions: [],
+					cta: 'Shop Now',
+					link: 'yourstore.example',
+					music: '',
+				}}
+				calculateMetadata={calculateArtisanStoryMetadata}
 			/>
 		</>
 	);
