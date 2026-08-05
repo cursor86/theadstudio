@@ -4,6 +4,7 @@ import {TransitionSeries, linearTiming} from '@remotion/transitions';
 import {fade} from '@remotion/transitions/fade';
 import {z} from 'zod';
 import {getAudioDurationSeconds} from './audio-duration';
+import {SampleLockWatermark} from './SampleLockWatermark';
 
 // Brand-story layout for artisans/makers: logo intro, an "about the maker"
 // card, an inspiration quote, then a numbered listicle-style photo passage
@@ -22,6 +23,7 @@ export const artisanStorySchema = z.object({
 	cta: z.string(),
 	link: z.string(),
 	music: z.string(),
+	locked: z.boolean().optional(),
 	durationSeconds: z.number().optional(),
 	totalFrames: z.number().optional(),
 });
@@ -284,6 +286,7 @@ export const ArtisanStoryAd: React.FC<ArtisanStoryProps> = ({
 	cta,
 	link,
 	music,
+	locked,
 	totalFrames,
 }) => {
 	const transitionFrames = s2f(0.4);
@@ -333,6 +336,7 @@ export const ArtisanStoryAd: React.FC<ArtisanStoryProps> = ({
 					<OutroCard cta={cta} link={link} bgImage={bg(3)} />
 				</TransitionSeries.Sequence>
 			</TransitionSeries>
+			{locked ? <SampleLockWatermark /> : null}
 		</>
 	);
 };

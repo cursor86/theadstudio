@@ -192,6 +192,7 @@ export const RemotionRoot: React.FC = () => {
 					cta: 'Shop Now',
 					link: 'yourstore.example',
 					music: '',
+					locked: false,
 				}}
 				calculateMetadata={calculateArtisanStoryMetadata}
 			/>
