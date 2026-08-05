@@ -7,6 +7,7 @@ import {TestimonialAd, calculateTestimonialMetadata, testimonialSchema} from './
 import {DemoTainmentAd, calculateDemoTainmentMetadata, demoTainmentSchema} from './DemoTainmentAd';
 import {ListicleAd, calculateListicleMetadata, listicleSchema} from './ListicleAd';
 import {StoryAd, calculateStoryMetadata, storySchema} from './StoryAd';
+import {BuildUpAd, calculateBuildUpMetadata, buildUpSchema} from './BuildUpAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -154,6 +155,23 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateStoryMetadata}
+			/>
+			<Composition
+				id="BuildUpAd"
+				component={BuildUpAd}
+				durationInFrames={22 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={buildUpSchema}
+				defaultProps={{
+					brand: 'theadzstudio',
+					tagline: 'Your Social Media Manager, Reimagined',
+					cta: "Let's Build Your Brand",
+					link: 'theadzstudio@gmail.com',
+					music: '',
+				}}
+				calculateMetadata={calculateBuildUpMetadata}
 			/>
 		</>
 	);
