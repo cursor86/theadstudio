@@ -10,6 +10,7 @@ import {StoryAd, calculateStoryMetadata, storySchema} from './StoryAd';
 import {BuildUpAd, calculateBuildUpMetadata, buildUpSchema} from './BuildUpAd';
 import {ArtisanStoryAd, calculateArtisanStoryMetadata, artisanStorySchema} from './ArtisanStoryAd';
 import {TradingHubAd, calculateTradingHubMetadata, tradingHubSchema} from './TradingHubAd';
+import {VendingAd, calculateVendingMetadata, vendingSchema} from './VendingAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -220,6 +221,31 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateTradingHubMetadata}
+			/>
+			<Composition
+				id="VendingAd"
+				component={VendingAd}
+				durationInFrames={20 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={vendingSchema}
+				defaultProps={{
+					brand: 'EasyVend',
+					tagline: 'Snacks & Drinks. Zero Hassle.',
+					painPoints: [
+						'Empty break room, missed revenue?',
+						'Employees leaving the building for snacks?',
+						'Tired of restocking it yourself?',
+					],
+					locations: ['Offices', 'Gyms', 'Apartments', 'Schools'],
+					process: ['Free Consultation', 'Free Installation', 'We Stock & Service', 'You Just Enjoy It'],
+					cta: 'Get Your Free Vending Machine',
+					contact: 'info@easy-vend.nl  ·  +31 6 41 41 61 16',
+					music: '',
+					locked: true,
+				}}
+				calculateMetadata={calculateVendingMetadata}
 			/>
 		</>
 	);
