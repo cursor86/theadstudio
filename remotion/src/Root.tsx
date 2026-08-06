@@ -9,6 +9,7 @@ import {ListicleAd, calculateListicleMetadata, listicleSchema} from './ListicleA
 import {StoryAd, calculateStoryMetadata, storySchema} from './StoryAd';
 import {BuildUpAd, calculateBuildUpMetadata, buildUpSchema} from './BuildUpAd';
 import {ArtisanStoryAd, calculateArtisanStoryMetadata, artisanStorySchema} from './ArtisanStoryAd';
+import {TradingHubAd, calculateTradingHubMetadata, tradingHubSchema} from './TradingHubAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -195,6 +196,30 @@ export const RemotionRoot: React.FC = () => {
 					locked: false,
 				}}
 				calculateMetadata={calculateArtisanStoryMetadata}
+			/>
+			<Composition
+				id="TradingHubAd"
+				component={TradingHubAd}
+				durationInFrames={24 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={tradingHubSchema}
+				defaultProps={{
+					logoPath: '',
+					tagline: 'Trade With Confidence — Live, From Basics to Advanced',
+					painPoints: [
+						'Random tips that never work?',
+						'Charts that make no sense?',
+						'Afraid to place your first trade?',
+					],
+					curriculum: ['Trading Basics', 'Sentiment Analysis', 'Technical Analysis', 'Advanced Strategy'],
+					liveCaption: 'Live, interactive sessions with real mentors — every level welcome.',
+					cta: 'Enroll Now',
+					link: 'sstraders.com',
+					music: '',
+				}}
+				calculateMetadata={calculateTradingHubMetadata}
 			/>
 		</>
 	);
