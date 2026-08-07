@@ -6,5 +6,6 @@ temp/
 
 # YouTube upload OAuth credentials / tokens / local state - never commit
 credentials.json
+credentials_tv.json
 token.json
 youtube_upload_manifest.json
