@@ -8,7 +8,7 @@ Setup (one-time):
      saves the resulting token to token.json so future runs don't prompt again.
 
 Usage:
-  python youtube_upload.py                       # scan remotion/out/, upload new videos as private
+  python youtube_upload.py                       # scan remotion/out/, upload new videos as public
   python youtube_upload.py --folder path/to/dir   # scan a different folder
   python youtube_upload.py --privacy unlisted     # private | unlisted | public
   python youtube_upload.py --dry-run              # show what would upload, without uploading
@@ -113,7 +113,7 @@ def default_metadata(filename):
         'description': description[:5000],
         'tags': tags[:30],
         'categoryId': DEFAULT_CATEGORY_ID,
-        'privacyStatus': 'private',
+        'privacyStatus': 'public',
     }
 
 
