@@ -11,6 +11,7 @@ import {BuildUpAd, calculateBuildUpMetadata, buildUpSchema} from './BuildUpAd';
 import {ArtisanStoryAd, calculateArtisanStoryMetadata, artisanStorySchema} from './ArtisanStoryAd';
 import {TradingHubAd, calculateTradingHubMetadata, tradingHubSchema} from './TradingHubAd';
 import {VendingAd, calculateVendingMetadata, vendingSchema} from './VendingAd';
+import {AgencyReelAd, calculateAgencyReelMetadata, agencyReelSchema} from './AgencyReelAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -246,6 +247,31 @@ export const RemotionRoot: React.FC = () => {
 					locked: true,
 				}}
 				calculateMetadata={calculateVendingMetadata}
+			/>
+			<Composition
+				id="AgencyReelAd"
+				component={AgencyReelAd}
+				durationInFrames={29 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={agencyReelSchema}
+				defaultProps={{
+					brand: 'TheAdzAgency',
+					products: [
+						{emoji: '⌚', label: 'Watch'},
+						{emoji: '🧴', label: 'Skincare'},
+					],
+					reasons: [
+						'Instant Motion From Any Photo',
+						'Studio-Grade Editorial Style',
+						'Built To Convert, Not Just Look Good',
+					],
+					cta: 'Submit Your Product Photos Today',
+					contact: 'theadzstudio@gmail.com',
+					music: '',
+				}}
+				calculateMetadata={calculateAgencyReelMetadata}
 			/>
 		</>
 	);
