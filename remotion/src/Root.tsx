@@ -13,6 +13,7 @@ import {TradingHubAd, calculateTradingHubMetadata, tradingHubSchema} from './Tra
 import {VendingAd, calculateVendingMetadata, vendingSchema} from './VendingAd';
 import {AgencyReelAd, calculateAgencyReelMetadata, agencyReelSchema} from './AgencyReelAd';
 import {MapZoomAd, calculateMapZoomMetadata, mapZoomSchema} from './MapZoomAd';
+import {SlimeListicleAd, calculateSlimeListicleMetadata, slimeListicleSchema} from './SlimeListicleAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -289,6 +290,28 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateMapZoomMetadata}
+			/>
+			<Composition
+				id="SlimeListicleAd"
+				component={SlimeListicleAd}
+				durationInFrames={26 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={slimeListicleSchema}
+				defaultProps={{
+					title: '4 Slimes You NEED 🙌',
+					items: [
+						{label: '1', text: 'Rainbow Butter Slime 🌈 So Soft!', image: ''},
+						{label: '2', text: 'Glitter Pop ✨ So Sparkly!', image: ''},
+						{label: '3', text: 'Watermelon Crunch 🍉 Smells SO Good!', image: ''},
+						{label: '4', text: 'Cookies & Cream 🍪 Squish It!', image: ''},
+					],
+					cta: 'Grab Yours Now! 🛍️',
+					link: 'Shop the link in bio',
+					music: '',
+				}}
+				calculateMetadata={calculateSlimeListicleMetadata}
 			/>
 		</>
 	);
