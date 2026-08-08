@@ -12,6 +12,7 @@ import {ArtisanStoryAd, calculateArtisanStoryMetadata, artisanStorySchema} from 
 import {TradingHubAd, calculateTradingHubMetadata, tradingHubSchema} from './TradingHubAd';
 import {VendingAd, calculateVendingMetadata, vendingSchema} from './VendingAd';
 import {AgencyReelAd, calculateAgencyReelMetadata, agencyReelSchema} from './AgencyReelAd';
+import {MapZoomAd, calculateMapZoomMetadata, mapZoomSchema} from './MapZoomAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -272,6 +273,22 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateAgencyReelMetadata}
+			/>
+			<Composition
+				id="MapZoomAd"
+				component={MapZoomAd}
+				durationInFrames={10 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={mapZoomSchema}
+				defaultProps={{
+					region: 'Texas',
+					caption: '5 Things You Didn’t Know About Texas',
+					brand: 'theadzstudio',
+					music: '',
+				}}
+				calculateMetadata={calculateMapZoomMetadata}
 			/>
 		</>
 	);
