@@ -40,6 +40,7 @@ props.music = copyIntoPublic(props.music, 'music');
 props.logoPath = props.logoPath ? copyIntoPublic(props.logoPath, 'logo') : '';
 props.heroImage = props.heroImage ? copyIntoPublic(props.heroImage, 'hero') : '';
 props.productImage = props.productImage ? copyIntoPublic(props.productImage, 'product') : '';
+props.videoSrc = props.videoSrc ? copyIntoPublic(props.videoSrc, 'video') : '';
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item

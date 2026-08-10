@@ -14,6 +14,7 @@ import {VendingAd, calculateVendingMetadata, vendingSchema} from './VendingAd';
 import {AgencyReelAd, calculateAgencyReelMetadata, agencyReelSchema} from './AgencyReelAd';
 import {MapZoomAd, calculateMapZoomMetadata, mapZoomSchema} from './MapZoomAd';
 import {SlimeListicleAd, calculateSlimeListicleMetadata, slimeListicleSchema} from './SlimeListicleAd';
+import {SlimeCaseStudyAd, calculateSlimeCaseStudyMetadata, slimeCaseStudySchema} from './SlimeCaseStudyAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -312,6 +313,33 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateSlimeListicleMetadata}
+			/>
+			<Composition
+				id="SlimeCaseStudyAd"
+				component={SlimeCaseStudyAd}
+				durationInFrames={30 * FPS}
+				fps={FPS}
+				width={1080}
+				height={1080}
+				schema={slimeCaseStudySchema}
+				defaultProps={{
+					storyLines: [
+						'Meet Our Client 🤐 (Name Kept Confidential)',
+						"They Had Great Products... But Flat Photos Weren't Selling.",
+						'theadzstudio Turned Their Photos Into Scroll-Stopping Video Ads',
+						'With Daily Ad Generation & Fresh Content, Every Single Day',
+						'They Generated Thousands of Views & Conversions 🚀',
+						'Sales Took Off. 📈',
+					],
+					videoSrc: '',
+					videoStartSeconds: 2.85,
+					videoEndSeconds: 14.7,
+					outroLine1: 'CLIENT: CONFIDENTIAL',
+					outroLine2: 'Results Real. Name Protected.',
+					contact: 'Want This For Your Brand? theadzstudio@gmail.com',
+					logoPath: '',
+				}}
+				calculateMetadata={calculateSlimeCaseStudyMetadata}
 			/>
 		</>
 	);
