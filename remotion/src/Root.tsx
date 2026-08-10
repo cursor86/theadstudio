@@ -338,6 +338,7 @@ export const RemotionRoot: React.FC = () => {
 					outroLine2: 'Results Real. Name Protected.',
 					contact: 'Want This For Your Brand? theadzstudio@gmail.com',
 					logoPath: '',
+					music: '',
 				}}
 				calculateMetadata={calculateSlimeCaseStudyMetadata}
 			/>

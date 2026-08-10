@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, Img, interpolate, OffthreadVideo, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Img, interpolate, OffthreadVideo, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {TransitionSeries, linearTiming} from '@remotion/transitions';
 import {fade} from '@remotion/transitions/fade';
 import {z} from 'zod';
@@ -19,6 +19,7 @@ export const slimeCaseStudySchema = z.object({
 	outroLine2: z.string(),
 	contact: z.string(),
 	logoPath: z.string().optional(),
+	music: z.string().optional(),
 });
 
 export type SlimeCaseStudyProps = z.infer<typeof slimeCaseStudySchema>;
@@ -243,12 +244,14 @@ export const SlimeCaseStudyAd: React.FC<SlimeCaseStudyProps> = ({
 	outroLine2,
 	contact,
 	logoPath,
+	music,
 }) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const timing = linearTiming({durationInFrames: transitionFrames});
 
 	return (
 		<>
+			{music ? <Audio src={music} volume={0.55} /> : null}
 			<TransitionSeries>
 				{storyLines.map((line, i) => (
 					<React.Fragment key={i}>
@@ -270,6 +273,7 @@ export const SlimeCaseStudyAd: React.FC<SlimeCaseStudyProps> = ({
 							src={videoSrc}
 							startFrom={s2f(videoStartSeconds)}
 							endAt={s2f(videoEndSeconds)}
+							muted
 							style={{width: '100%', height: '100%', objectFit: 'cover'}}
 						/>
 					</AbsoluteFill>
