@@ -323,14 +323,15 @@ export const RemotionRoot: React.FC = () => {
 				height={1080}
 				schema={slimeCaseStudySchema}
 				defaultProps={{
-					storyLines: [
-						'Meet Our Client 🤐 (Name Kept Confidential)',
-						"They Had Great Products... But Flat Photos Weren't Selling.",
-						'theadzstudio Turned Their Photos Into Scroll-Stopping Video Ads',
-						'With Daily Ad Generation & Fresh Content, Every Single Day',
-						'They Generated Thousands of Views & Conversions 🚀',
-						'Sales Took Off. 📈',
-					],
+					hookWords: ['STUCK.', 'STATIC.', 'INVISIBLE.'],
+					problemLine: 'Flat Photos. Zero Scroll-Stop.',
+					brandLine: 'theadzstudio',
+					performanceLabel: 'Daily Ad Generation. Real Growth.',
+					viewsTarget: 12400,
+					viewsLabel: 'VIEWS',
+					multiplierTarget: 3.2,
+					multiplierLabel: 'SALES MULTIPLIER',
+					revealLine: "Here's The Actual Ad We Built Them",
 					videoSrc: '',
 					videoStartSeconds: 2.85,
 					videoEndSeconds: 14.7,
