@@ -340,9 +340,8 @@ export const RemotionRoot: React.FC = () => {
 						{src: '', label: 'Holiday Tumbler'},
 					],
 					portfolioTitle: 'Just Some Of What We Build',
-					outroLine1: 'CLIENT: CONFIDENTIAL',
-					outroLine2: 'Results Real. Name Protected.',
-					contact: 'Want This For Your Brand? theadzstudio@gmail.com',
+					outroPunchline: "That's How Fast We Move. That's How We Create.",
+					contact: 'theadzstudio@gmail.com',
 					logoPath: '',
 					music: '',
 				}}

@@ -23,8 +23,7 @@ export const slimeCaseStudySchema = z.object({
 	revealLine: z.string(),
 	portfolioImages: z.array(z.object({src: z.string(), label: z.string()})),
 	portfolioTitle: z.string(),
-	outroLine1: z.string(),
-	outroLine2: z.string(),
+	outroPunchline: z.string(),
 	contact: z.string(),
 	logoPath: z.string().optional(),
 	music: z.string().optional(),
@@ -482,64 +481,48 @@ const PortfolioGrid: React.FC<{title: string; images: {src: string; label: strin
 	);
 };
 
-const OutroCard: React.FC<{line1: string; line2: string; contact: string; logoPath?: string}> = ({line1, line2, contact, logoPath}) => {
+const OutroCard: React.FC<{punchline: string; contact: string; logoPath?: string}> = ({punchline, contact, logoPath}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const pop = popIn(frame, fps);
-	const badgeScale = interpolate(pop, [0, 1], [0.6, 1]);
-	const line2Opacity = interpolate(frame, [16, 32], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-	const ctaOpacity = interpolate(frame, [34, 50], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-	const ctaScale = spring({frame: frame - 34, fps, config: {damping: 11, mass: 0.6, stiffness: 170}});
+	const scale = interpolate(pop, [0, 1], [0.6, 1]);
+	const emailOpacity = interpolate(frame, [20, 36], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+	const emailScale = spring({frame: frame - 20, fps, config: {damping: 11, mass: 0.6, stiffness: 170}});
 
 	return (
 		<AbsoluteFill style={{background: INK, overflow: 'hidden'}}>
 			<Dots />
 			<AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', padding: '0 80px'}}>
 				{logoPath ? (
-					<div style={{opacity: pop, transform: `scale(${badgeScale})`, marginBottom: 26}}>
+					<div style={{opacity: pop, transform: `scale(${scale})`, marginBottom: 26}}>
 						<Img src={logoPath} style={{width: 200, objectFit: 'contain'}} />
 					</div>
 				) : null}
 				<div
 					style={{
 						opacity: pop,
-						transform: `scale(${badgeScale})`,
-						background: YELLOW,
-						color: INK,
-						fontFamily: FUNKY_FONT,
-						fontWeight: 900,
-						fontSize: 30,
-						padding: '12px 28px',
-						borderRadius: 999,
-						marginBottom: 24,
-					}}
-				>
-					{line1}
-				</div>
-				<div
-					style={{
-						opacity: line2Opacity,
+						transform: `scale(${scale})`,
 						color: 'white',
 						fontFamily: FUNKY_FONT,
-						fontWeight: 800,
-						fontSize: 42,
+						fontWeight: 900,
+						fontSize: 44,
 						lineHeight: 1.3,
 						textAlign: 'center',
 						marginBottom: 34,
 					}}
 				>
-					{line2}
+					{punchline}
 				</div>
 				<div
 					style={{
-						opacity: ctaOpacity,
-						transform: `scale(${ctaScale})`,
+						opacity: emailOpacity,
+						transform: `scale(${emailScale})`,
 						background: `linear-gradient(135deg, ${SKY} 0%, ${PURPLE} 100%)`,
 						color: 'white',
 						fontFamily: FUNKY_FONT,
 						fontWeight: 800,
-						fontSize: 28,
-						padding: '18px 34px',
+						fontSize: 34,
+						padding: '20px 40px',
 						borderRadius: 999,
 					}}
 				>
@@ -581,8 +564,7 @@ export const SlimeCaseStudyAd: React.FC<SlimeCaseStudyProps> = ({
 	revealLine,
 	portfolioImages,
 	portfolioTitle,
-	outroLine1,
-	outroLine2,
+	outroPunchline,
 	contact,
 	logoPath,
 	music,
@@ -634,7 +616,7 @@ export const SlimeCaseStudyAd: React.FC<SlimeCaseStudyProps> = ({
 				<TransitionSeries.Transition presentation={fade()} timing={timing} />
 
 				<TransitionSeries.Sequence durationInFrames={s2f(OUTRO_SECONDS)}>
-					<OutroCard line1={outroLine1} line2={outroLine2} contact={contact} logoPath={logoPath} />
+					<OutroCard punchline={outroPunchline} contact={contact} logoPath={logoPath} />
 				</TransitionSeries.Sequence>
 			</TransitionSeries>
 		</>
