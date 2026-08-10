@@ -46,6 +46,11 @@ if (Array.isArray(props.items)) {
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item
 	);
 }
+if (Array.isArray(props.portfolioImages)) {
+	props.portfolioImages = props.portfolioImages.map((item, i) =>
+		item && item.src ? {...item, src: copyIntoPublic(item.src, `portfolio${i}`)} : item
+	);
+}
 
 const candidateBrowserPaths = [
 	process.env.REMOTION_BROWSER_EXECUTABLE,

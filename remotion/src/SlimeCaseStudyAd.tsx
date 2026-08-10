@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Img, interpolate, OffthreadVideo, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Img, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {TransitionSeries, linearTiming} from '@remotion/transitions';
 import {fade} from '@remotion/transitions/fade';
 import {z} from 'zod';
@@ -21,9 +21,8 @@ export const slimeCaseStudySchema = z.object({
 	multiplierTarget: z.number(),
 	multiplierLabel: z.string(),
 	revealLine: z.string(),
-	videoSrc: z.string(),
-	videoStartSeconds: z.number(),
-	videoEndSeconds: z.number(),
+	portfolioImages: z.array(z.object({src: z.string(), label: z.string()})),
+	portfolioTitle: z.string(),
 	outroLine1: z.string(),
 	outroLine2: z.string(),
 	contact: z.string(),
@@ -397,6 +396,92 @@ const RevealCard: React.FC<{text: string}> = ({text}) => {
 	);
 };
 
+// --- Portfolio beat: one still from each ad, scattered like a photo pile
+// instead of a rigid grid - reads as "a body of real work" rather than a
+// template slot filled in.
+const PORTFOLIO_LAYOUT = [
+	{x: 130, y: 260, rotate: -7, size: 300, delay: 0},
+	{x: 610, y: 230, rotate: 5, size: 290, delay: 6},
+	{x: 355, y: 430, rotate: -2, size: 340, delay: 12},
+	{x: 120, y: 660, rotate: 4, size: 300, delay: 18},
+	{x: 610, y: 660, rotate: -5, size: 300, delay: 24},
+];
+
+const PortfolioGrid: React.FC<{title: string; images: {src: string; label: string}[]}> = ({title, images}) => {
+	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
+	const titleOpacity = interpolate(frame, [0, 14], [0, 1], {extrapolateRight: 'clamp'});
+
+	return (
+		<AbsoluteFill style={{background: INK, overflow: 'hidden'}}>
+			<Dots parallax={0.4} />
+			<div
+				style={{
+					position: 'absolute',
+					top: 60,
+					left: 0,
+					right: 0,
+					textAlign: 'center',
+					opacity: titleOpacity,
+					color: 'white',
+					fontFamily: FUNKY_FONT,
+					fontWeight: 900,
+					fontSize: 42,
+					padding: '0 70px',
+				}}
+			>
+				{title}
+			</div>
+			{images.slice(0, 5).map((img, i) => {
+				const layout = PORTFOLIO_LAYOUT[i];
+				const pop = popIn(frame, fps, layout.delay, {damping: 13, mass: 0.6, stiffness: 150});
+				const scale = interpolate(pop, [0, 1], [0.5, 1]);
+				return (
+					<div
+						key={i}
+						style={{
+							position: 'absolute',
+							left: layout.x,
+							top: layout.y,
+							width: layout.size,
+							height: layout.size,
+							transform: `scale(${scale}) rotate(${layout.rotate}deg)`,
+							opacity: pop,
+							background: 'white',
+							padding: 10,
+							borderRadius: 16,
+							boxShadow: '0 16px 0 rgba(0,0,0,0.25)',
+						}}
+					>
+						<div style={{width: '100%', height: '100%', borderRadius: 8, overflow: 'hidden', position: 'relative'}}>
+							<Img src={img.src} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+							{img.label ? (
+								<div
+									style={{
+										position: 'absolute',
+										bottom: 0,
+										left: 0,
+										right: 0,
+										background: 'rgba(0,0,0,0.55)',
+										color: 'white',
+										fontFamily: FUNKY_FONT,
+										fontWeight: 700,
+										fontSize: 15,
+										textAlign: 'center',
+										padding: '6px 4px',
+									}}
+								>
+									{img.label}
+								</div>
+							) : null}
+						</div>
+					</div>
+				);
+			})}
+		</AbsoluteFill>
+	);
+};
+
 const OutroCard: React.FC<{line1: string; line2: string; contact: string; logoPath?: string}> = ({line1, line2, contact, logoPath}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
@@ -471,15 +556,16 @@ const BRAND_SECONDS = 1.3;
 const PERFORMANCE_SECONDS = 4.2;
 const CONVERSIONS_SECONDS = 2.6;
 const REVEAL_SECONDS = 2.3;
+const PORTFOLIO_SECONDS = 4.6;
 const OUTRO_SECONDS = 4.5;
 const TRANSITION_SECONDS = 0.3;
 
-export const calculateSlimeCaseStudyMetadata = ({props}: {props: SlimeCaseStudyProps}) => {
-	const clipFrames = s2f(props.videoEndSeconds - props.videoStartSeconds);
+export const calculateSlimeCaseStudyMetadata = () => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
-	const introTotalSeconds = HOOK_SECONDS + PROBLEM_SECONDS + BRAND_SECONDS + PERFORMANCE_SECONDS + CONVERSIONS_SECONDS + REVEAL_SECONDS;
-	const totalSegments = 7; // hook, problem, brand, performance, conversions, reveal, clip, outro (minus 1 for count below)
-	const total = s2f(introTotalSeconds) + clipFrames + s2f(OUTRO_SECONDS) - (totalSegments) * transitionFrames;
+	const introTotalSeconds =
+		HOOK_SECONDS + PROBLEM_SECONDS + BRAND_SECONDS + PERFORMANCE_SECONDS + CONVERSIONS_SECONDS + REVEAL_SECONDS + PORTFOLIO_SECONDS + OUTRO_SECONDS;
+	const totalSegments = 8; // hook, problem, brand, performance, conversions, reveal, portfolio, outro
+	const total = s2f(introTotalSeconds) - (totalSegments - 1) * transitionFrames;
 	return {durationInFrames: total};
 };
 
@@ -493,9 +579,8 @@ export const SlimeCaseStudyAd: React.FC<SlimeCaseStudyProps> = ({
 	multiplierTarget,
 	multiplierLabel,
 	revealLine,
-	videoSrc,
-	videoStartSeconds,
-	videoEndSeconds,
+	portfolioImages,
+	portfolioTitle,
 	outroLine1,
 	outroLine2,
 	contact,
@@ -543,16 +628,8 @@ export const SlimeCaseStudyAd: React.FC<SlimeCaseStudyProps> = ({
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={fade()} timing={timing} />
 
-				<TransitionSeries.Sequence durationInFrames={s2f(videoEndSeconds - videoStartSeconds)}>
-					<AbsoluteFill style={{background: 'white'}}>
-						<OffthreadVideo
-							src={videoSrc}
-							startFrom={s2f(videoStartSeconds)}
-							endAt={s2f(videoEndSeconds)}
-							muted
-							style={{width: '100%', height: '100%', objectFit: 'cover'}}
-						/>
-					</AbsoluteFill>
+				<TransitionSeries.Sequence durationInFrames={s2f(PORTFOLIO_SECONDS)}>
+					<PortfolioGrid title={portfolioTitle} images={portfolioImages} />
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={fade()} timing={timing} />
 
