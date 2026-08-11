@@ -481,6 +481,43 @@ const PortfolioGrid: React.FC<{title: string; images: {src: string; label: strin
 	);
 };
 
+// Small burst of colored shapes exploding outward from the button the
+// moment the email locks in - physics-lite via angle/distance interpolation.
+const ConfettiBurst: React.FC<{triggerFrame: number}> = ({triggerFrame}) => {
+	const frame = useCurrentFrame();
+	const local = frame - triggerFrame;
+	if (local < 0) return null;
+	const colors = [YELLOW, HOT_PINK, SKY, GREEN, PURPLE];
+	const pieces = Array.from({length: 16}, (_, i) => {
+		const angle = (i / 16) * Math.PI * 2 + (i % 2 === 0 ? 0.15 : -0.15);
+		const distance = interpolate(local, [0, 26], [0, 220], {extrapolateRight: 'clamp', easing: (t) => 1 - (1 - t) * (1 - t)});
+		const x = Math.cos(angle) * distance;
+		const y = Math.sin(angle) * distance * 0.7;
+		const opacity = interpolate(local, [0, 6, 22, 30], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+		const spin = local * (i % 2 === 0 ? 10 : -10);
+		const size = 10 + (i % 3) * 4;
+		return (
+			<div
+				key={i}
+				style={{
+					position: 'absolute',
+					left: '50%',
+					top: '50%',
+					width: size,
+					height: size,
+					marginLeft: -size / 2,
+					marginTop: -size / 2,
+					background: colors[i % colors.length],
+					borderRadius: i % 3 === 0 ? '50%' : 4,
+					opacity,
+					transform: `translate(${x}px, ${y}px) rotate(${spin}deg)`,
+				}}
+			/>
+		);
+	});
+	return <>{pieces}</>;
+};
+
 const OutroCard: React.FC<{punchline: string; contact: string; logoPath?: string}> = ({punchline, contact, logoPath}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
@@ -488,9 +525,21 @@ const OutroCard: React.FC<{punchline: string; contact: string; logoPath?: string
 	const scale = interpolate(pop, [0, 1], [0.6, 1]);
 	const emailOpacity = interpolate(frame, [20, 36], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 	const emailScale = spring({frame: frame - 20, fps, config: {damping: 11, mass: 0.6, stiffness: 170}});
+	const spotlightScale = interpolate(frame, [0, 40], [0.6, 1.4], {extrapolateRight: 'clamp'});
+	const spotlightOpacity = interpolate(frame, [0, 20], [0, 0.5], {extrapolateRight: 'clamp'});
+	// Diagonal shine sweeping once across the email button after it lands.
+	const shineX = interpolate(frame, [36, 58], [-160, 260], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+	const shineOpacity = interpolate(frame, [36, 42, 54, 58], [0, 0.8, 0.8, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 
 	return (
 		<AbsoluteFill style={{background: INK, overflow: 'hidden'}}>
+			<AbsoluteFill
+				style={{
+					background: `radial-gradient(ellipse at 50% 55%, ${PURPLE}55 0%, transparent 60%)`,
+					transform: `scale(${spotlightScale})`,
+					opacity: spotlightOpacity,
+				}}
+			/>
 			<Dots />
 			<AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', padding: '0 80px'}}>
 				{logoPath ? (
@@ -513,20 +562,38 @@ const OutroCard: React.FC<{punchline: string; contact: string; logoPath?: string
 				>
 					{punchline}
 				</div>
-				<div
-					style={{
-						opacity: emailOpacity,
-						transform: `scale(${emailScale})`,
-						background: `linear-gradient(135deg, ${SKY} 0%, ${PURPLE} 100%)`,
-						color: 'white',
-						fontFamily: FUNKY_FONT,
-						fontWeight: 800,
-						fontSize: 34,
-						padding: '20px 40px',
-						borderRadius: 999,
-					}}
-				>
-					{contact}
+				<div style={{position: 'relative'}}>
+					<ConfettiBurst triggerFrame={20} />
+					<div
+						style={{
+							position: 'relative',
+							opacity: emailOpacity,
+							transform: `scale(${emailScale})`,
+							background: `linear-gradient(135deg, ${SKY} 0%, ${PURPLE} 100%)`,
+							color: 'white',
+							fontFamily: FUNKY_FONT,
+							fontWeight: 800,
+							fontSize: 34,
+							padding: '20px 40px',
+							borderRadius: 999,
+							overflow: 'hidden',
+							boxShadow: `0 0 40px ${SKY}66`,
+						}}
+					>
+						{contact}
+						<div
+							style={{
+								position: 'absolute',
+								top: 0,
+								bottom: 0,
+								left: shineX,
+								width: 60,
+								opacity: shineOpacity,
+								background: 'linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.75) 50%, transparent 100%)',
+								transform: 'skewX(-20deg)',
+							}}
+						/>
+					</div>
 				</div>
 			</AbsoluteFill>
 		</AbsoluteFill>
