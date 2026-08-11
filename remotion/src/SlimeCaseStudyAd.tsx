@@ -27,6 +27,11 @@ export const slimeCaseStudySchema = z.object({
 	contact: z.string(),
 	logoPath: z.string().optional(),
 	music: z.string().optional(),
+	// 'short' drops the story beats (problem/brand/performance/conversions/
+	// reveal) and keeps just hook -> portfolio -> outro at a slightly more
+	// generous pace, for a ~12-14s teaser cut instead of uniformly speeding
+	// up all 8 beats into something unreadable.
+	mode: z.enum(['full', 'short']).optional(),
 });
 
 export type SlimeCaseStudyProps = z.infer<typeof slimeCaseStudySchema>;
@@ -610,8 +615,19 @@ const PORTFOLIO_SECONDS = 4.6;
 const OUTRO_SECONDS = 4.5;
 const TRANSITION_SECONDS = 0.3;
 
-export const calculateSlimeCaseStudyMetadata = () => {
+// Short-cut beat durations - hook and portfolio get a bit more breathing
+// room than their full-cut counterparts since they're carrying the whole
+// video alone now.
+const SHORT_HOOK_SECONDS = 3.0;
+const SHORT_PORTFOLIO_SECONDS = 5.5;
+
+export const calculateSlimeCaseStudyMetadata = ({props}: {props: SlimeCaseStudyProps}) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
+	if (props.mode === 'short') {
+		const totalSeconds = SHORT_HOOK_SECONDS + SHORT_PORTFOLIO_SECONDS + OUTRO_SECONDS;
+		const total = s2f(totalSeconds) - 2 * transitionFrames;
+		return {durationInFrames: total};
+	}
 	const introTotalSeconds =
 		HOOK_SECONDS + PROBLEM_SECONDS + BRAND_SECONDS + PERFORMANCE_SECONDS + CONVERSIONS_SECONDS + REVEAL_SECONDS + PORTFOLIO_SECONDS + OUTRO_SECONDS;
 	const totalSegments = 8; // hook, problem, brand, performance, conversions, reveal, portfolio, outro
@@ -635,9 +651,35 @@ export const SlimeCaseStudyAd: React.FC<SlimeCaseStudyProps> = ({
 	contact,
 	logoPath,
 	music,
+	mode,
 }) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const timing = linearTiming({durationInFrames: transitionFrames});
+
+	if (mode === 'short') {
+		const shortHookFrames = s2f(SHORT_HOOK_SECONDS);
+		return (
+			<>
+				{music ? <Audio src={music} volume={0.55} /> : null}
+				<TransitionSeries>
+					<TransitionSeries.Sequence durationInFrames={shortHookFrames}>
+						<HookSlam words={hookWords} durationInFrames={shortHookFrames} />
+					</TransitionSeries.Sequence>
+					<TransitionSeries.Transition presentation={fade()} timing={timing} />
+
+					<TransitionSeries.Sequence durationInFrames={s2f(SHORT_PORTFOLIO_SECONDS)}>
+						<PortfolioGrid title={portfolioTitle} images={portfolioImages} />
+					</TransitionSeries.Sequence>
+					<TransitionSeries.Transition presentation={fade()} timing={timing} />
+
+					<TransitionSeries.Sequence durationInFrames={s2f(OUTRO_SECONDS)}>
+						<OutroCard punchline={outroPunchline} contact={contact} logoPath={logoPath} />
+					</TransitionSeries.Sequence>
+				</TransitionSeries>
+			</>
+		);
+	}
+
 	const performanceFrames = s2f(PERFORMANCE_SECONDS);
 	const conversionsFrames = s2f(CONVERSIONS_SECONDS);
 	const hookFrames = s2f(HOOK_SECONDS);
