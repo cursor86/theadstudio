@@ -15,6 +15,7 @@ import {AgencyReelAd, calculateAgencyReelMetadata, agencyReelSchema} from './Age
 import {MapZoomAd, calculateMapZoomMetadata, mapZoomSchema} from './MapZoomAd';
 import {SlimeListicleAd, calculateSlimeListicleMetadata, slimeListicleSchema} from './SlimeListicleAd';
 import {SlimeCaseStudyAd, calculateSlimeCaseStudyMetadata, slimeCaseStudySchema} from './SlimeCaseStudyAd';
+import {TradingHubPoster, calculateTradingHubPosterMetadata, tradingHubPosterSchema} from './TradingHubPoster';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -346,6 +347,23 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateSlimeCaseStudyMetadata}
+			/>
+			<Composition
+				id="TradingHubPoster"
+				component={TradingHubPoster}
+				durationInFrames={30}
+				fps={FPS}
+				width={1080}
+				height={1080}
+				schema={tradingHubPosterSchema}
+				defaultProps={{
+					title: 'Real Sentiment & Technical Analysis',
+					sentimentLabel: 'Market Sentiment: Bullish',
+					statLeft: '📈 10-Day Trend',
+					statRight: '🎯 Live Signal',
+					watermark: 'theadzstudio',
+				}}
+				calculateMetadata={calculateTradingHubPosterMetadata}
 			/>
 		</>
 	);
