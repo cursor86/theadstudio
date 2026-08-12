@@ -16,6 +16,7 @@ import {MapZoomAd, calculateMapZoomMetadata, mapZoomSchema} from './MapZoomAd';
 import {SlimeListicleAd, calculateSlimeListicleMetadata, slimeListicleSchema} from './SlimeListicleAd';
 import {SlimeCaseStudyAd, calculateSlimeCaseStudyMetadata, slimeCaseStudySchema} from './SlimeCaseStudyAd';
 import {TradingHubPoster, calculateTradingHubPosterMetadata, tradingHubPosterSchema} from './TradingHubPoster';
+import {SlimeAsmrAd, calculateSlimeAsmrMetadata, slimeAsmrSchema} from './SlimeAsmrAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -364,6 +365,25 @@ export const RemotionRoot: React.FC = () => {
 					watermark: 'theadzstudio',
 				}}
 				calculateMetadata={calculateTradingHubPosterMetadata}
+			/>
+			<Composition
+				id="SlimeAsmrAd"
+				component={SlimeAsmrAd}
+				durationInFrames={20 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={slimeAsmrSchema}
+				defaultProps={{
+					heroImage: '',
+					flavorLabel: 'Butter Slime',
+					openingLine: 'Slow. Soft. Satisfying.',
+					closingLine: 'Content that feels as good as it looks.',
+					brandName: 'theadzstudio',
+					contact: 'theadzstudio@gmail.com',
+					music: '',
+				}}
+				calculateMetadata={calculateSlimeAsmrMetadata}
 			/>
 		</>
 	);
