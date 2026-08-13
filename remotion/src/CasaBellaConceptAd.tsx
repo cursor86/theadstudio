@@ -6,20 +6,16 @@ import {z} from 'zod';
 
 // Outreach/pitch piece: a polished showcase reel built from a prospect's own
 // real product photos (Casa Bella - Home & Living, a furniture store), bilingual
-// (English + Albanian, matching the store's own Instagram bio language), closing
-// with an honest "concept by theadzstudio" credit rather than pretending to be
-// their official content - this is a sample sent cold to open a conversation.
+// (English + Albanian, matching the store's own Instagram bio language). The
+// closing card carries only the store's own branding/handle - it's meant to
+// look like their own finished ad; the "this one's a gift" framing lives in
+// the outreach DM sent alongside it, not in the video itself.
 export const casaBellaConceptSchema = z.object({
 	storeHandle: z.string(),
 	storeCity: z.string(),
 	taglineEn: z.string(),
 	taglineSq: z.string(),
 	photos: z.array(z.object({src: z.string(), captionEn: z.string(), captionSq: z.string()})),
-	pitchLineEn: z.string(),
-	pitchLineSq: z.string(),
-	ctaEn: z.string(),
-	ctaSq: z.string(),
-	contact: z.string(),
 	music: z.string().optional(),
 });
 
@@ -109,21 +105,22 @@ const PhotoBeat: React.FC<{src: string; captionEn: string; captionSq: string; in
 	);
 };
 
-const OutroBeat: React.FC<{
-	storeHandle: string;
-	storeCity: string;
-	pitchLineEn: string;
-	pitchLineSq: string;
-	ctaEn: string;
-	ctaSq: string;
-	contact: string;
-}> = ({storeHandle, storeCity, pitchLineEn, pitchLineSq, ctaEn, ctaSq, contact}) => {
+// Closing card carries only the store's own branding - wordmark, tagline,
+// Instagram handle, and city - so the reel reads as their own finished ad
+// rather than an agency pitch. (The "this one's a gift" framing lives in the
+// outreach DM, not baked into the video itself.)
+const OutroBeat: React.FC<{storeHandle: string; storeCity: string; taglineEn: string; taglineSq: string}> = ({
+	storeHandle,
+	storeCity,
+	taglineEn,
+	taglineSq,
+}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
-	const tagIn = spring({frame, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
-	const pitchIn = spring({frame: frame - 12, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
-	const ctaIn = spring({frame: frame - 26, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
-	const pillIn = spring({frame: frame - 38, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
+	const wordmarkIn = spring({frame, fps, from: 0, to: 1, config: {damping: 15, mass: 0.8}});
+	const lineIn = spring({frame: frame - 14, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
+	const pillIn = spring({frame: frame - 28, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
+	const ruleWidth = interpolate(frame, [6, 28], [0, 140], {extrapolateRight: 'clamp'});
 	const breathe = 1 + Math.sin(frame / 30) * 0.02;
 
 	return (
@@ -138,44 +135,14 @@ const OutroBeat: React.FC<{
 					transform: `scale(${breathe})`,
 				}}
 			/>
-			<div
-				style={{
-					opacity: tagIn,
-					transform: `translateY(${(1 - tagIn) * 14}px)`,
-					padding: '8px 20px',
-					borderRadius: 999,
-					border: `1px solid ${GOLD}66`,
-					fontFamily: SANS,
-					fontWeight: 700,
-					fontSize: 15,
-					letterSpacing: 2,
-					color: GOLD_SOFT,
-					marginBottom: 26,
-				}}
-			>
-				CONCEPT AD FOR {storeHandle.toUpperCase()} · {storeCity.toUpperCase()}
+			<div style={{textAlign: 'center', opacity: wordmarkIn, transform: `translateY(${(1 - wordmarkIn) * 20}px)`}}>
+				<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: 56, color: CREAM, letterSpacing: 3}}>CASA BELLA</div>
+				<div style={{fontFamily: SANS, fontWeight: 600, fontSize: 17, color: GOLD, letterSpacing: 6, marginTop: 6}}>HOME &amp; LIVING</div>
+				<div style={{width: ruleWidth, height: 1, background: GOLD, margin: '20px auto'}} />
 			</div>
-			<div
-				style={{
-					opacity: pitchIn,
-					transform: `translateY(${(1 - pitchIn) * 16}px)`,
-					textAlign: 'center',
-					padding: '0 90px',
-				}}
-			>
-				<div style={{fontFamily: SERIF, fontWeight: 700, fontSize: 32, color: CREAM}}>{pitchLineEn}</div>
-				<div style={{fontFamily: SANS, fontSize: 18, color: '#B9B2A6', marginTop: 8}}>{pitchLineSq}</div>
-			</div>
-			<div
-				style={{
-					opacity: ctaIn,
-					transform: `translateY(${(1 - ctaIn) * 16}px)`,
-					textAlign: 'center',
-					marginTop: 30,
-				}}
-			>
-				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 22, color: GOLD}}>{ctaEn}</div>
-				<div style={{fontFamily: SANS, fontSize: 16, color: GOLD_SOFT, marginTop: 4}}>{ctaSq}</div>
+			<div style={{textAlign: 'center', opacity: lineIn, transform: `translateY(${(1 - lineIn) * 16}px)`, padding: '0 90px', marginTop: 4}}>
+				<div style={{fontFamily: SERIF, fontStyle: 'italic', fontSize: 24, color: CREAM}}>{taglineEn}</div>
+				<div style={{fontFamily: SANS, fontSize: 16, color: '#B9B2A6', marginTop: 6}}>{taglineSq}</div>
 			</div>
 			<div
 				style={{
@@ -186,11 +153,15 @@ const OutroBeat: React.FC<{
 					border: `1px solid ${GOLD}55`,
 					opacity: pillIn,
 					transform: `translateY(${(1 - pillIn) * 16}px)`,
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					gap: 4,
 				}}
 			>
-				<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 20, color: CREAM}}>{contact}</span>
+				<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 21, color: CREAM}}>{storeHandle}</span>
+				<span style={{fontFamily: SANS, fontSize: 15, color: GOLD_SOFT}}>{storeCity}</span>
 			</div>
-			<div style={{position: 'absolute', bottom: 56, fontFamily: SANS, fontSize: 14, letterSpacing: 1, color: '#726A5C'}}>Crafted by theadzstudio</div>
 		</AbsoluteFill>
 	);
 };
@@ -201,11 +172,6 @@ export const CasaBellaConceptAd: React.FC<CasaBellaConceptProps> = ({
 	taglineEn,
 	taglineSq,
 	photos,
-	pitchLineEn,
-	pitchLineSq,
-	ctaEn,
-	ctaSq,
-	contact,
 	music,
 }) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
@@ -230,15 +196,7 @@ export const CasaBellaConceptAd: React.FC<CasaBellaConceptProps> = ({
 				))}
 
 				<TransitionSeries.Sequence durationInFrames={s2f(OUTRO_SECONDS)}>
-					<OutroBeat
-						storeHandle={storeHandle}
-						storeCity={storeCity}
-						pitchLineEn={pitchLineEn}
-						pitchLineSq={pitchLineSq}
-						ctaEn={ctaEn}
-						ctaSq={ctaSq}
-						contact={contact}
-					/>
+					<OutroBeat storeHandle={storeHandle} storeCity={storeCity} taglineEn={taglineEn} taglineSq={taglineSq} />
 				</TransitionSeries.Sequence>
 			</TransitionSeries>
 			{music ? <Audio src={music} volume={0.5} /> : null}

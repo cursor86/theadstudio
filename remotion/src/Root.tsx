@@ -424,11 +424,6 @@ export const RemotionRoot: React.FC = () => {
 					taglineEn: 'Furniture That Feels Like Home',
 					taglineSq: 'Mobilje Që Ndihen Si Shtëpi',
 					photos: [],
-					pitchLineEn: "This is what your feed could look like.",
-					pitchLineSq: 'Kështu mund të duket feed-i juaj.',
-					ctaEn: "Let's Build Your Next Campaign",
-					ctaSq: 'Le ta ndërtojmë fushatën tuaj të radhës',
-					contact: 'theadzstudio@gmail.com',
 					music: '',
 				}}
 				calculateMetadata={calculateCasaBellaConceptMetadata}
