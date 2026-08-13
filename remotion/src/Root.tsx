@@ -20,6 +20,7 @@ import {SlimeAsmrAd, calculateSlimeAsmrMetadata, slimeAsmrSchema} from './SlimeA
 import {TransformationPromoAd, calculateTransformationPromoMetadata, transformationPromoSchema} from './TransformationPromoAd';
 import {CasaBellaConceptAd, calculateCasaBellaConceptMetadata, casaBellaConceptSchema} from './CasaBellaConceptAd';
 import {BrightBloomTeaserAd, calculateBrightBloomTeaserMetadata, brightBloomTeaserSchema} from './BrightBloomTeaserAd';
+import {HandbagShowcaseAd, calculateHandbagShowcaseMetadata, handbagShowcaseSchema} from './HandbagShowcaseAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -449,6 +450,33 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateBrightBloomTeaserMetadata}
+			/>
+			<Composition
+				id="HandbagShowcaseAd"
+				component={HandbagShowcaseAd}
+				durationInFrames={26 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={handbagShowcaseSchema}
+				defaultProps={{
+					provideImages: [],
+					provideHeadline: 'THIS IS WHAT YOU PROVIDE US',
+					adImage: '',
+					adRevealText: "HERE'S OUR AD",
+					exclusiveText: 'Versatile. Handmade. Exclusive handbags — only at our store.',
+					exclusiveImage: '',
+					fabricsText: 'Colours that pop. Fabrics that last.',
+					fabricsImage: '',
+					finalImage: '',
+					finalTagline: 'Waiting for you with our crafts.',
+					brandName: 'theadzstudio',
+					ctaLine: "That's the difference we bring to your story.",
+					contact: 'theadzstudio@gmail.com',
+					logoPath: '',
+					music: '',
+				}}
+				calculateMetadata={calculateHandbagShowcaseMetadata}
 			/>
 		</>
 	);

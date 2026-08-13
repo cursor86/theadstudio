@@ -45,6 +45,13 @@ props.marketImage = props.marketImage ? copyIntoPublic(props.marketImage, 'marke
 props.toteCloseupImage = props.toteCloseupImage ? copyIntoPublic(props.toteCloseupImage, 'tote') : '';
 props.collectionImage = props.collectionImage ? copyIntoPublic(props.collectionImage, 'collection') : '';
 props.lifestyleImage = props.lifestyleImage ? copyIntoPublic(props.lifestyleImage, 'lifestyle') : '';
+props.adImage = props.adImage ? copyIntoPublic(props.adImage, 'ad') : '';
+props.exclusiveImage = props.exclusiveImage ? copyIntoPublic(props.exclusiveImage, 'exclusive') : '';
+props.fabricsImage = props.fabricsImage ? copyIntoPublic(props.fabricsImage, 'fabrics') : '';
+props.finalImage = props.finalImage ? copyIntoPublic(props.finalImage, 'final') : '';
+if (Array.isArray(props.provideImages)) {
+	props.provideImages = props.provideImages.map((p, i) => copyIntoPublic(p, `provide${i}`));
+}
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item
