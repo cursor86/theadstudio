@@ -21,6 +21,7 @@ import {TransformationPromoAd, calculateTransformationPromoMetadata, transformat
 import {CasaBellaConceptAd, calculateCasaBellaConceptMetadata, casaBellaConceptSchema} from './CasaBellaConceptAd';
 import {BrightBloomTeaserAd, calculateBrightBloomTeaserMetadata, brightBloomTeaserSchema} from './BrightBloomTeaserAd';
 import {HandbagShowcaseAd, calculateHandbagShowcaseMetadata, handbagShowcaseSchema} from './HandbagShowcaseAd';
+import {QuickCaptionAd, calculateQuickCaptionMetadata, quickCaptionSchema} from './QuickCaptionAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -477,6 +478,20 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateHandbagShowcaseMetadata}
+			/>
+			<Composition
+				id="QuickCaptionAd"
+				component={QuickCaptionAd}
+				durationInFrames={20 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={quickCaptionSchema}
+				defaultProps={{
+					slides: [],
+					music: '',
+				}}
+				calculateMetadata={calculateQuickCaptionMetadata}
 			/>
 		</>
 	);

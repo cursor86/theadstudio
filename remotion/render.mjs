@@ -52,6 +52,9 @@ props.finalImage = props.finalImage ? copyIntoPublic(props.finalImage, 'final') 
 if (Array.isArray(props.provideImages)) {
 	props.provideImages = props.provideImages.map((p, i) => copyIntoPublic(p, `provide${i}`));
 }
+if (Array.isArray(props.slides)) {
+	props.slides = props.slides.map((item, i) => (item && item.src ? {...item, src: copyIntoPublic(item.src, `slide${i}`)} : item));
+}
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item
