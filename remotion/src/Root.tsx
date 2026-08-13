@@ -18,6 +18,7 @@ import {SlimeCaseStudyAd, calculateSlimeCaseStudyMetadata, slimeCaseStudySchema}
 import {TradingHubPoster, calculateTradingHubPosterMetadata, tradingHubPosterSchema} from './TradingHubPoster';
 import {SlimeAsmrAd, calculateSlimeAsmrMetadata, slimeAsmrSchema} from './SlimeAsmrAd';
 import {TransformationPromoAd, calculateTransformationPromoMetadata, transformationPromoSchema} from './TransformationPromoAd';
+import {CasaBellaConceptAd, calculateCasaBellaConceptMetadata, casaBellaConceptSchema} from './CasaBellaConceptAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -408,6 +409,28 @@ export const RemotionRoot: React.FC = () => {
 					contact: 'theadzstudio@gmail.com',
 				}}
 				calculateMetadata={calculateTransformationPromoMetadata}
+			/>
+			<Composition
+				id="CasaBellaConceptAd"
+				component={CasaBellaConceptAd}
+				durationInFrames={20 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={casaBellaConceptSchema}
+				defaultProps={{
+					storeHandle: '@mobileria_casabella',
+					storeCity: 'Gjakovë, Kosovë',
+					taglineEn: 'Furniture That Feels Like Home',
+					taglineSq: 'Mobilje Që Ndihen Si Shtëpi',
+					photos: [],
+					pitchLineEn: "This is what your feed could look like.",
+					pitchLineSq: 'Kështu mund të duket feed-i juaj.',
+					ctaEn: "Let's Build Your Next Campaign",
+					ctaSq: 'Le ta ndërtojmë fushatën tuaj të radhës',
+					contact: 'theadzstudio@gmail.com',
+				}}
+				calculateMetadata={calculateCasaBellaConceptMetadata}
 			/>
 		</>
 	);
