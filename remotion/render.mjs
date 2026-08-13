@@ -46,6 +46,12 @@ if (Array.isArray(props.items)) {
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item
 	);
 }
+if (Array.isArray(props.beforeImages)) {
+	props.beforeImages = props.beforeImages.map((p, i) => copyIntoPublic(p, `before${i}`));
+}
+if (Array.isArray(props.afterImages)) {
+	props.afterImages = props.afterImages.map((p, i) => copyIntoPublic(p, `after${i}`));
+}
 if (Array.isArray(props.portfolioImages)) {
 	props.portfolioImages = props.portfolioImages.map((item, i) =>
 		item && item.src ? {...item, src: copyIntoPublic(item.src, `portfolio${i}`)} : item

@@ -17,6 +17,7 @@ import {SlimeListicleAd, calculateSlimeListicleMetadata, slimeListicleSchema} fr
 import {SlimeCaseStudyAd, calculateSlimeCaseStudyMetadata, slimeCaseStudySchema} from './SlimeCaseStudyAd';
 import {TradingHubPoster, calculateTradingHubPosterMetadata, tradingHubPosterSchema} from './TradingHubPoster';
 import {SlimeAsmrAd, calculateSlimeAsmrMetadata, slimeAsmrSchema} from './SlimeAsmrAd';
+import {TransformationPromoAd, calculateTransformationPromoMetadata, transformationPromoSchema} from './TransformationPromoAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -384,6 +385,29 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateSlimeAsmrMetadata}
+			/>
+			<Composition
+				id="TransformationPromoAd"
+				component={TransformationPromoAd}
+				durationInFrames={16 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={transformationPromoSchema}
+				defaultProps={{
+					brandName: 'theadzstudio',
+					tagline: 'Creative Digital Solutions',
+					beforeLabel: 'What You Give Us',
+					beforeImages: [],
+					beforePainPoints: ['Random Product Photos', 'Low Social Presence', 'Low-Quality Content', 'Fewer Sales'],
+					afterLabel: 'What You Get',
+					afterImages: [],
+					afterWins: ['Scroll-Stopping Content', 'More Likes & Followers', 'Higher Sales'],
+					logoPath: '',
+					cta: 'Ready To Level Up Your Content?',
+					contact: 'theadzstudio@gmail.com',
+				}}
+				calculateMetadata={calculateTransformationPromoMetadata}
 			/>
 		</>
 	);
