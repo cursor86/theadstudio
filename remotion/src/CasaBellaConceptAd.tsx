@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Img, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Img, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {TransitionSeries, linearTiming} from '@remotion/transitions';
 import {fade} from '@remotion/transitions/fade';
 import {z} from 'zod';
@@ -20,6 +20,7 @@ export const casaBellaConceptSchema = z.object({
 	ctaEn: z.string(),
 	ctaSq: z.string(),
 	contact: z.string(),
+	music: z.string().optional(),
 });
 
 export type CasaBellaConceptProps = z.infer<typeof casaBellaConceptSchema>;
@@ -205,6 +206,7 @@ export const CasaBellaConceptAd: React.FC<CasaBellaConceptProps> = ({
 	ctaEn,
 	ctaSq,
 	contact,
+	music,
 }) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const timing = linearTiming({durationInFrames: transitionFrames});
@@ -239,6 +241,7 @@ export const CasaBellaConceptAd: React.FC<CasaBellaConceptProps> = ({
 					/>
 				</TransitionSeries.Sequence>
 			</TransitionSeries>
+			{music ? <Audio src={music} volume={0.5} /> : null}
 		</AbsoluteFill>
 	);
 };

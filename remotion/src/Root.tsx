@@ -429,6 +429,7 @@ export const RemotionRoot: React.FC = () => {
 					ctaEn: "Let's Build Your Next Campaign",
 					ctaSq: 'Le ta ndërtojmë fushatën tuaj të radhës',
 					contact: 'theadzstudio@gmail.com',
+					music: '',
 				}}
 				calculateMetadata={calculateCasaBellaConceptMetadata}
 			/>
