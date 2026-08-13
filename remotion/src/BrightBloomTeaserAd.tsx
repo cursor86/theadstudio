@@ -35,20 +35,17 @@ const FINAL_STATIC_FRAMES = 250;
 
 type CropPreset = {posX: number; posY: number; scale: number};
 
-const TOTE_CROPS: CropPreset[] = [
-	{posX: 50, posY: 35, scale: 1.15},
-	{posX: 65, posY: 25, scale: 1.4},
-	{posX: 40, posY: 55, scale: 1.3},
-];
-const COLLECTION_CROPS: CropPreset[] = [
-	{posX: 35, posY: 45, scale: 1.3},
-	{posX: 65, posY: 45, scale: 1.3},
-	{posX: 50, posY: 35, scale: 1.05},
-];
+// Tote/collection sources are designed graphics with baked-in text near the
+// edges (titles, "shop now" lines) - any cover-crop risks slicing that text
+// off, so those beats show the full image via contain (never cropped) on a
+// soft brand-colour backdrop instead. Only the lifestyle photo (plain
+// photography, no on-image text) is safe to crop with cover.
 const LIFESTYLE_CROPS: CropPreset[] = [
 	{posX: 35, posY: 55, scale: 1.25},
 	{posX: 75, posY: 60, scale: 1.35},
+	{posX: 50, posY: 40, scale: 1.15},
 ];
+const LETTERBOX_BG = ['#FBEFE9', '#FDF3EC'];
 
 const wordsOf = (text: string) => text.split(/\s+/).filter(Boolean);
 const slamDuration = (text: string, perWord: number) => wordsOf(text).length * perWord;
@@ -88,10 +85,34 @@ const WordSlamBeat: React.FC<{text: string; perWord: number; bg: string}> = ({te
 	);
 };
 
-const ProductCut: React.FC<{src: string; crop: CropPreset}> = ({src, crop}) => {
+const ProductCut: React.FC<{src: string; crop?: CropPreset; contain?: boolean; bg?: string}> = ({src, crop, contain, bg}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
-	const punch = spring({frame, fps, from: 1.1, to: 1, config: {damping: 14, mass: 0.4, stiffness: 300}});
+	// Contain-mode punch stays at or under 1.0 so the already-fully-visible
+	// image never grows past frame edges - no risk of clipping the text.
+	const punch = spring({
+		frame,
+		fps,
+		from: contain ? 0.94 : 1.1,
+		to: 1,
+		config: {damping: 14, mass: 0.4, stiffness: 300},
+	});
+
+	if (contain) {
+		return (
+			<AbsoluteFill style={{backgroundColor: bg ?? LETTERBOX_BG[0], alignItems: 'center', justifyContent: 'center'}}>
+				<Img
+					src={src}
+					style={{
+						width: '100%',
+						height: '100%',
+						objectFit: 'contain',
+						transform: `scale(${punch})`,
+					}}
+				/>
+			</AbsoluteFill>
+		);
+	}
 
 	return (
 		<AbsoluteFill style={{backgroundColor: '#000', overflow: 'hidden'}}>
@@ -101,8 +122,8 @@ const ProductCut: React.FC<{src: string; crop: CropPreset}> = ({src, crop}) => {
 					width: '100%',
 					height: '100%',
 					objectFit: 'cover',
-					objectPosition: `${crop.posX}% ${crop.posY}%`,
-					transform: `scale(${crop.scale * punch})`,
+					objectPosition: `${crop!.posX}% ${crop!.posY}%`,
+					transform: `scale(${crop!.scale * punch})`,
 				}}
 			/>
 		</AbsoluteFill>
@@ -148,17 +169,19 @@ const FinalStatic: React.FC<{src: string; text: string}> = ({src, text}) => {
 	);
 };
 
-// Fixed 8-cut sequence covering every crop preset across the three product
-// photos, in an interleaved order so the same image never repeats back to back.
+// Fixed 8-cut sequence, in an interleaved order so the same image never
+// repeats back to back. Tote/collection graphics show fully (contain, no
+// crop); the lifestyle photo cycles through crop presets since it's safe to
+// crop (no on-image text to clip).
 const buildCuts = (toteCloseupImage: string, collectionImage: string, lifestyleImage: string) => [
-	{src: toteCloseupImage, crop: TOTE_CROPS[0]},
-	{src: collectionImage, crop: COLLECTION_CROPS[0]},
+	{src: toteCloseupImage, contain: true, bg: LETTERBOX_BG[0]},
+	{src: collectionImage, contain: true, bg: LETTERBOX_BG[1]},
 	{src: lifestyleImage, crop: LIFESTYLE_CROPS[0]},
-	{src: toteCloseupImage, crop: TOTE_CROPS[1]},
-	{src: collectionImage, crop: COLLECTION_CROPS[1]},
 	{src: lifestyleImage, crop: LIFESTYLE_CROPS[1]},
-	{src: toteCloseupImage, crop: TOTE_CROPS[2]},
-	{src: collectionImage, crop: COLLECTION_CROPS[2]},
+	{src: toteCloseupImage, contain: true, bg: LETTERBOX_BG[1]},
+	{src: collectionImage, contain: true, bg: LETTERBOX_BG[0]},
+	{src: lifestyleImage, crop: LIFESTYLE_CROPS[2]},
+	{src: lifestyleImage, crop: LIFESTYLE_CROPS[0]},
 ];
 
 export const BrightBloomTeaserAd: React.FC<BrightBloomTeaserProps> = ({
@@ -190,7 +213,7 @@ export const BrightBloomTeaserAd: React.FC<BrightBloomTeaserProps> = ({
 				{cuts.slice(0, 4).map((c, i) => (
 					<React.Fragment key={`a${i}`}>
 						<Series.Sequence durationInFrames={PRODUCT_CUT_FRAMES}>
-							<ProductCut src={c.src} crop={c.crop} />
+							<ProductCut {...c} />
 						</Series.Sequence>
 						<Series.Sequence durationInFrames={FLASH_FRAMES}>
 							<FlashOverlay />
@@ -208,7 +231,7 @@ export const BrightBloomTeaserAd: React.FC<BrightBloomTeaserProps> = ({
 				{cuts.slice(4, 7).map((c, i) => (
 					<React.Fragment key={`b${i}`}>
 						<Series.Sequence durationInFrames={PRODUCT_CUT_FRAMES}>
-							<ProductCut src={c.src} crop={c.crop} />
+							<ProductCut {...c} />
 						</Series.Sequence>
 						<Series.Sequence durationInFrames={FLASH_FRAMES}>
 							<FlashOverlay />
@@ -224,7 +247,7 @@ export const BrightBloomTeaserAd: React.FC<BrightBloomTeaserProps> = ({
 				</Series.Sequence>
 
 				<Series.Sequence durationInFrames={PRODUCT_CUT_FRAMES}>
-					<ProductCut src={cuts[7].src} crop={cuts[7].crop} />
+					<ProductCut {...cuts[7]} />
 				</Series.Sequence>
 				<Series.Sequence durationInFrames={FLASH_FRAMES}>
 					<FlashOverlay />
