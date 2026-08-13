@@ -19,6 +19,7 @@ import {TradingHubPoster, calculateTradingHubPosterMetadata, tradingHubPosterSch
 import {SlimeAsmrAd, calculateSlimeAsmrMetadata, slimeAsmrSchema} from './SlimeAsmrAd';
 import {TransformationPromoAd, calculateTransformationPromoMetadata, transformationPromoSchema} from './TransformationPromoAd';
 import {CasaBellaConceptAd, calculateCasaBellaConceptMetadata, casaBellaConceptSchema} from './CasaBellaConceptAd';
+import {BrightBloomTeaserAd, calculateBrightBloomTeaserMetadata, brightBloomTeaserSchema} from './BrightBloomTeaserAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -427,6 +428,27 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateCasaBellaConceptMetadata}
+			/>
+			<Composition
+				id="BrightBloomTeaserAd"
+				component={BrightBloomTeaserAd}
+				durationInFrames={12 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={brightBloomTeaserSchema}
+				defaultProps={{
+					marketImage: '',
+					toteCloseupImage: '',
+					collectionImage: '',
+					lifestyleImage: '',
+					hookText: 'Stop buying boring, mass-produced bags. 🌸',
+					toteText: 'Meet the ultimate everyday tote.',
+					collectionText: 'Premium quilted cotton. Slow, artisan fashion.',
+					ctaText: "Designed in Suffolk. Tap the link to claim your print before it sells out. ✨",
+					music: '',
+				}}
+				calculateMetadata={calculateBrightBloomTeaserMetadata}
 			/>
 		</>
 	);

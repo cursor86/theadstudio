@@ -41,6 +41,10 @@ props.logoPath = props.logoPath ? copyIntoPublic(props.logoPath, 'logo') : '';
 props.heroImage = props.heroImage ? copyIntoPublic(props.heroImage, 'hero') : '';
 props.productImage = props.productImage ? copyIntoPublic(props.productImage, 'product') : '';
 props.videoSrc = props.videoSrc ? copyIntoPublic(props.videoSrc, 'video') : '';
+props.marketImage = props.marketImage ? copyIntoPublic(props.marketImage, 'market') : '';
+props.toteCloseupImage = props.toteCloseupImage ? copyIntoPublic(props.toteCloseupImage, 'tote') : '';
+props.collectionImage = props.collectionImage ? copyIntoPublic(props.collectionImage, 'collection') : '';
+props.lifestyleImage = props.lifestyleImage ? copyIntoPublic(props.lifestyleImage, 'lifestyle') : '';
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item
