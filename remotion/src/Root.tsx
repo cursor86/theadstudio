@@ -503,7 +503,7 @@ export const RemotionRoot: React.FC = () => {
 				height={HEIGHT}
 				schema={bookPromoSchema}
 				defaultProps={{
-					hookLine: 'Is Your Shop Ready For 2027?',
+					hookLine: 'Every few years, the ground shifts under sellers and business owners. 2027 is shaping up to be one of those years.',
 					coverImage: '',
 					insideImages: [],
 					insideCaptions: [],

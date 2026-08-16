@@ -34,7 +34,7 @@ const SERIF = '"Georgia", "Times New Roman", serif';
 
 const s2f = (s: number) => Math.round(s * FPS);
 
-const HOOK_SECONDS = 2.5;
+const HOOK_SECONDS = 3.8;
 const COVER_SECONDS = 3.6;
 const INSIDE_SECONDS = 1.5;
 const BONUS_SECONDS = 2.4;
@@ -42,16 +42,63 @@ const AUDIENCE_SECONDS = 2.4;
 const CTA_SECONDS = 3.4;
 const TRANSITION_SECONDS = 0.35;
 
+// Literary, book-page style opener rather than a blunt question - a large
+// decorative quote mark, a small eyebrow label, and the book's own real
+// opening line set in serif italic, easing in like a page settling into view.
 const HookBeat: React.FC<{text: string}> = ({text}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
-	const pop = spring({frame, fps, from: 0.7, to: 1, config: {damping: 12, mass: 0.6, stiffness: 220}});
-	const rule = interpolate(frame, [10, 28], [0, 120], {extrapolateRight: 'clamp'});
+	const markIn = spring({frame, fps, from: 0, to: 1, config: {damping: 18, mass: 1}});
+	const eyebrowIn = spring({frame: frame - 8, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
+	const textIn = spring({frame: frame - 16, fps, from: 0, to: 1, config: {damping: 16, mass: 0.9}});
+	const rule = interpolate(frame, [26, 44], [0, 90], {extrapolateRight: 'clamp'});
+
 	return (
 		<AbsoluteFill style={{background: `radial-gradient(ellipse at 50% 40%, ${NAVY} 0%, ${NAVY_DEEP} 100%)`, alignItems: 'center', justifyContent: 'center'}}>
-			<div style={{textAlign: 'center', padding: '0 80px', transform: `scale(${pop})`}}>
-				<div style={{fontFamily: SANS, fontWeight: 900, fontSize: 52, color: CREAM, lineHeight: 1.25}}>{text}</div>
-				<div style={{width: rule, height: 3, background: CORAL, margin: '26px auto 0'}} />
+			<div
+				style={{
+					position: 'absolute',
+					top: 210,
+					fontFamily: SERIF,
+					fontSize: 160,
+					color: TEAL,
+					opacity: markIn * 0.22,
+					transform: `translateY(${(1 - markIn) * -16}px)`,
+					lineHeight: 1,
+				}}
+			>
+				&ldquo;
+			</div>
+			<div style={{textAlign: 'center', padding: '0 100px'}}>
+				<div
+					style={{
+						fontFamily: SANS,
+						fontWeight: 700,
+						fontSize: 14,
+						letterSpacing: 4,
+						color: CORAL,
+						marginBottom: 22,
+						opacity: eyebrowIn,
+						transform: `translateY(${(1 - eyebrowIn) * -10}px)`,
+					}}
+				>
+					A NOTE BEFORE YOU START
+				</div>
+				<div
+					style={{
+						fontFamily: SERIF,
+						fontStyle: 'italic',
+						fontWeight: 500,
+						fontSize: 40,
+						color: CREAM,
+						lineHeight: 1.45,
+						opacity: textIn,
+						transform: `translateY(${(1 - textIn) * 14}px)`,
+					}}
+				>
+					{text}
+				</div>
+				<div style={{width: rule, height: 1, background: `${CREAM}55`, margin: '30px auto 0'}} />
 			</div>
 		</AbsoluteFill>
 	);
