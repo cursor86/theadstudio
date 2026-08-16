@@ -22,6 +22,7 @@ import {CasaBellaConceptAd, calculateCasaBellaConceptMetadata, casaBellaConceptS
 import {BrightBloomTeaserAd, calculateBrightBloomTeaserMetadata, brightBloomTeaserSchema} from './BrightBloomTeaserAd';
 import {HandbagShowcaseAd, calculateHandbagShowcaseMetadata, handbagShowcaseSchema} from './HandbagShowcaseAd';
 import {QuickCaptionAd, calculateQuickCaptionMetadata, quickCaptionSchema} from './QuickCaptionAd';
+import {BookPromoAd, calculateBookPromoMetadata, bookPromoSchema} from './BookPromoAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -492,6 +493,28 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateQuickCaptionMetadata}
+			/>
+			<Composition
+				id="BookPromoAd"
+				component={BookPromoAd}
+				durationInFrames={20 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={bookPromoSchema}
+				defaultProps={{
+					hookLine: 'Is Your Shop Ready For 2027?',
+					coverImage: '',
+					insideImages: [],
+					insideCaptions: [],
+					bonusImage: '',
+					bonusLine: 'BONUS: 150+ Product Ideas',
+					audienceLine: 'For Etsy sellers, Shopify owners, and makers building for what’s next.',
+					ctaLine: 'Get your copy before 2027 catches everyone else off guard.',
+					shopLine: 'Available Now on Etsy',
+					music: '',
+				}}
+				calculateMetadata={calculateBookPromoMetadata}
 			/>
 		</>
 	);

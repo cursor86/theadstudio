@@ -52,6 +52,11 @@ props.finalImage = props.finalImage ? copyIntoPublic(props.finalImage, 'final') 
 if (Array.isArray(props.provideImages)) {
 	props.provideImages = props.provideImages.map((p, i) => copyIntoPublic(p, `provide${i}`));
 }
+props.coverImage = props.coverImage ? copyIntoPublic(props.coverImage, 'cover') : '';
+props.bonusImage = props.bonusImage ? copyIntoPublic(props.bonusImage, 'bonus') : '';
+if (Array.isArray(props.insideImages)) {
+	props.insideImages = props.insideImages.map((p, i) => copyIntoPublic(p, `inside${i}`));
+}
 if (Array.isArray(props.slides)) {
 	props.slides = props.slides.map((item, i) => (item && item.src ? {...item, src: copyIntoPublic(item.src, `slide${i}`)} : item));
 }
