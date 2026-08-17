@@ -13,8 +13,7 @@ export const bookPromoSchema = z.object({
 	coverImage: z.string(),
 	insideImages: z.array(z.string()),
 	insideCaptions: z.array(z.string()),
-	bonusImage: z.string(),
-	bonusLine: z.string(),
+	summarySlides: z.array(z.object({title: z.string(), items: z.array(z.string())})),
 	audienceLine: z.string(),
 	ctaLine: z.string(),
 	shopLine: z.string(),
@@ -35,12 +34,12 @@ const SERIF = '"Georgia", "Times New Roman", serif';
 const s2f = (s: number) => Math.round(s * FPS);
 
 const HOOK_SECONDS = 3.8;
-const COVER_SECONDS = 3.6;
-const INSIDE_SECONDS = 1.5;
-const BONUS_SECONDS = 2.4;
-const AUDIENCE_SECONDS = 2.4;
-const CTA_SECONDS = 3.4;
-const TRANSITION_SECONDS = 0.35;
+const COVER_SECONDS = 4.2;
+const INSIDE_SECONDS = 3.2;
+const SUMMARY_SECONDS = 3.4;
+const AUDIENCE_SECONDS = 2.8;
+const CTA_SECONDS = 3.8;
+const TRANSITION_SECONDS = 0.4;
 
 // Literary, book-page style opener rather than a blunt question - a large
 // decorative quote mark, a small eyebrow label, and the book's own real
@@ -163,24 +162,32 @@ const InsideBeat: React.FC<{src: string; caption: string}> = ({src, caption}) =>
 	const pop = spring({frame, fps, from: 0.92, to: 1, config: {damping: 16, mass: 0.6}});
 	const capIn = spring({frame: frame - 6, fps, from: 0, to: 1, config: {damping: 15, mass: 0.6}});
 	return (
-		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, alignItems: 'center', justifyContent: 'center'}}>
-			<div
-				style={{
-					width: 780,
-					height: 1120,
-					transform: `scale(${pop})`,
-					borderRadius: 6,
-					overflow: 'hidden',
-					boxShadow: '0 30px 70px rgba(0,0,0,0.55)',
-					border: '1px solid rgba(255,255,255,0.08)',
-				}}
-			>
-				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain'}} />
-			</div>
+		<AbsoluteFill style={{backgroundColor: NAVY_DEEP}}>
+			{/* Blurred, dimmed copy of the same image fills the frame so the
+			readable version can be shown "zoomed out" (smaller, fully framed)
+			without empty bars or any cropping. */}
+			<AbsoluteFill style={{overflow: 'hidden'}}>
+				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(34px) brightness(0.4)', transform: 'scale(1.25)'}} />
+			</AbsoluteFill>
+			<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+				<div
+					style={{
+						width: 620,
+						height: 890,
+						transform: `scale(${pop})`,
+						borderRadius: 6,
+						overflow: 'hidden',
+						boxShadow: '0 30px 70px rgba(0,0,0,0.55)',
+						border: '1px solid rgba(255,255,255,0.1)',
+					}}
+				>
+					<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain', backgroundColor: NAVY_DEEP}} />
+				</div>
+			</AbsoluteFill>
 			<div
 				style={{
 					position: 'absolute',
-					bottom: 100,
+					bottom: 110,
 					left: 0,
 					right: 0,
 					textAlign: 'center',
@@ -206,51 +213,51 @@ const InsideBeat: React.FC<{src: string; caption: string}> = ({src, caption}) =>
 	);
 };
 
-const BonusBeat: React.FC<{src: string; text: string}> = ({src, text}) => {
+// Dense list pages (e.g. "150+ product ideas") are never legible as a
+// screenshot at video scale - extracted into clean pill-bullet summary
+// slides instead, generously paced so each line is actually readable.
+const SummaryBeat: React.FC<{title: string; items: string[]}> = ({title, items}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
-	const pop = spring({frame, fps, from: 0.9, to: 1, config: {damping: 15, mass: 0.7}});
-	const tagIn = spring({frame: frame - 8, fps, from: 0, to: 1, config: {damping: 12, mass: 0.5, stiffness: 240}});
+	const titleIn = spring({frame, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
 	return (
-		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, alignItems: 'center', justifyContent: 'center'}}>
-			<div
-				style={{
-					width: 780,
-					height: 1120,
-					transform: `scale(${pop})`,
-					borderRadius: 6,
-					overflow: 'hidden',
-					boxShadow: '0 30px 70px rgba(0,0,0,0.55)',
-					border: `2px solid ${TEAL}55`,
-				}}
-			>
-				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain'}} />
-			</div>
-			<div
-				style={{
-					position: 'absolute',
-					top: 130,
-					left: 0,
-					right: 0,
-					textAlign: 'center',
-					opacity: tagIn,
-					transform: `scale(${0.85 + tagIn * 0.15})`,
-				}}
-			>
-				<span
+		<AbsoluteFill style={{background: `radial-gradient(ellipse at 50% 30%, ${NAVY} 0%, ${NAVY_DEEP} 100%)`, alignItems: 'center', justifyContent: 'center'}}>
+			<div style={{width: '100%', padding: '0 70px'}}>
+				<div
 					style={{
 						fontFamily: SANS,
 						fontWeight: 900,
 						fontSize: 34,
-						color: NAVY_DEEP,
-						background: TEAL,
-						padding: '12px 30px',
-						borderRadius: 999,
-						boxShadow: `0 14px 30px ${TEAL}55`,
+						color: TEAL,
+						textAlign: 'center',
+						marginBottom: 40,
+						opacity: titleIn,
+						transform: `translateY(${(1 - titleIn) * -12}px)`,
 					}}
 				>
-					{text}
-				</span>
+					{title}
+				</div>
+				{items.map((item, i) => {
+					const delay = 14 + i * 11;
+					const pop = spring({frame: frame - delay, fps, from: 0, to: 1, config: {damping: 15, mass: 0.6}});
+					return (
+						<div
+							key={i}
+							style={{
+								opacity: pop,
+								transform: `translateX(${(1 - pop) * -24}px)`,
+								background: 'rgba(255,255,255,0.06)',
+								border: `1px solid ${CORAL}44`,
+								borderRadius: 999,
+								padding: '16px 30px',
+								marginBottom: 16,
+								textAlign: 'center',
+							}}
+						>
+							<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 24, color: CREAM}}>{item}</span>
+						</div>
+					);
+				})}
 			</div>
 		</AbsoluteFill>
 	);
@@ -340,8 +347,7 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 	coverImage,
 	insideImages,
 	insideCaptions,
-	bonusImage,
-	bonusLine,
+	summarySlides,
 	audienceLine,
 	ctaLine,
 	shopLine,
@@ -372,10 +378,14 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 					</React.Fragment>
 				))}
 
-				<TransitionSeries.Sequence durationInFrames={s2f(BONUS_SECONDS)}>
-					<BonusBeat src={bonusImage} text={bonusLine} />
-				</TransitionSeries.Sequence>
-				<TransitionSeries.Transition presentation={fade()} timing={timing} />
+				{summarySlides.map((slide, i) => (
+					<React.Fragment key={i}>
+						<TransitionSeries.Sequence durationInFrames={s2f(SUMMARY_SECONDS)}>
+							<SummaryBeat title={slide.title} items={slide.items} />
+						</TransitionSeries.Sequence>
+						<TransitionSeries.Transition presentation={fade()} timing={timing} />
+					</React.Fragment>
+				))}
 
 				<TransitionSeries.Sequence durationInFrames={s2f(AUDIENCE_SECONDS)}>
 					<AudienceBeat text={audienceLine} />
@@ -394,9 +404,15 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 export const calculateBookPromoMetadata = ({props}: {props: BookPromoProps}) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const insideCount = props.insideImages?.length ?? 3;
-	const segments = 4 + insideCount; // hook + cover + inside* + bonus + audience + cta
+	const summaryCount = props.summarySlides?.length ?? 2;
+	const segments = 3 + insideCount + summaryCount; // hook + cover + inside* + summary* + audience + cta
 	const total =
-		s2f(HOOK_SECONDS) + s2f(COVER_SECONDS) + insideCount * s2f(INSIDE_SECONDS) + s2f(BONUS_SECONDS) + s2f(AUDIENCE_SECONDS) + s2f(CTA_SECONDS) -
+		s2f(HOOK_SECONDS) +
+		s2f(COVER_SECONDS) +
+		insideCount * s2f(INSIDE_SECONDS) +
+		summaryCount * s2f(SUMMARY_SECONDS) +
+		s2f(AUDIENCE_SECONDS) +
+		s2f(CTA_SECONDS) -
 		transitionFrames * (segments - 1);
 	return {durationInFrames: total};
 };

@@ -507,8 +507,16 @@ export const RemotionRoot: React.FC = () => {
 					coverImage: '',
 					insideImages: [],
 					insideCaptions: [],
-					bonusImage: '',
-					bonusLine: 'BONUS: 150+ Product Ideas',
+					summarySlides: [
+						{
+							title: 'TOP NICHES TO WATCH',
+							items: ['Personalized pet keepsakes', 'AI-assisted custom portraits', 'Sustainable home & kitchen goods', 'Wellness ritual kits'],
+						},
+						{
+							title: 'BONUS: 150+ PRODUCT IDEAS',
+							items: ['Printables & Planners', 'AI-Assisted Art & Design', 'Personalized Physical Goods', 'Wellness & Ritual'],
+						},
+					],
 					audienceLine: 'For Etsy sellers, Shopify owners, and makers building for what’s next.',
 					ctaLine: 'Get your copy before 2027 catches everyone else off guard.',
 					shopLine: 'Available Now on Etsy',
