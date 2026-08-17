@@ -106,37 +106,30 @@ const HookBeat: React.FC<{text: string}> = ({text}) => {
 const CoverBeat: React.FC<{src: string; durationInFrames: number}> = ({src, durationInFrames}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
-	const pop = spring({frame, fps, from: 0.85, to: 1, config: {damping: 14, mass: 0.8}});
-	const tilt = Math.sin(frame / 55) * 3;
+	const pop = spring({frame, fps, from: 1.08, to: 1, config: {damping: 16, mass: 0.9}});
 	const sweep = interpolate(frame, [0, durationInFrames], [-40, 140], {extrapolateRight: 'clamp'});
 	const ribbonIn = spring({frame: frame - 14, fps, from: 0, to: 1, config: {damping: 14, mass: 0.7}});
 
 	return (
-		<AbsoluteFill style={{background: `radial-gradient(ellipse at 50% 35%, ${NAVY} 0%, ${NAVY_DEEP} 100%)`, alignItems: 'center', justifyContent: 'center'}}>
+		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, overflow: 'hidden'}}>
+			{/* Blurred cover-fit copy fills the frame edge-to-edge; the sharp
+			copy sits on top at contain (full width, letterboxed top/bottom
+			only) so it's as large as possible while never cropping the title. */}
+			<Img src={src} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(38px) brightness(0.35)', transform: 'scale(1.2)'}} />
+			<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${pop})`}} />
+			</AbsoluteFill>
 			<div
 				style={{
-					position: 'relative',
-					width: 560,
-					height: 792,
-					transform: `scale(${pop}) rotateY(${tilt}deg)`,
-					borderRadius: 8,
-					overflow: 'hidden',
-					boxShadow: '0 40px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)',
+					position: 'absolute',
+					top: 0,
+					left: `${sweep}%`,
+					width: '30%',
+					height: '100%',
+					background: 'linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.16) 50%, transparent 100%)',
+					transform: 'rotate(8deg)',
 				}}
-			>
-				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain'}} />
-				<div
-					style={{
-						position: 'absolute',
-						top: 0,
-						left: `${sweep}%`,
-						width: '30%',
-						height: '100%',
-						background: 'linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)',
-						transform: 'rotate(8deg)',
-					}}
-				/>
-			</div>
+			/>
 			<div
 				style={{
 					position: 'absolute',
@@ -156,33 +149,16 @@ const CoverBeat: React.FC<{src: string; durationInFrames: number}> = ({src, dura
 	);
 };
 
-const InsideBeat: React.FC<{src: string; caption: string}> = ({src, caption}) => {
+const InsideBeat: React.FC<{src: string; caption: string; durationInFrames: number}> = ({src, caption, durationInFrames}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
-	const pop = spring({frame, fps, from: 0.92, to: 1, config: {damping: 16, mass: 0.6}});
+	const scale = interpolate(frame, [0, durationInFrames], [1.0, 1.05], {extrapolateRight: 'clamp'});
 	const capIn = spring({frame: frame - 6, fps, from: 0, to: 1, config: {damping: 15, mass: 0.6}});
 	return (
-		<AbsoluteFill style={{backgroundColor: NAVY_DEEP}}>
-			{/* Blurred, dimmed copy of the same image fills the frame so the
-			readable version can be shown "zoomed out" (smaller, fully framed)
-			without empty bars or any cropping. */}
-			<AbsoluteFill style={{overflow: 'hidden'}}>
-				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(34px) brightness(0.4)', transform: 'scale(1.25)'}} />
-			</AbsoluteFill>
+		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, overflow: 'hidden'}}>
+			<Img src={src} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(38px) brightness(0.35)', transform: 'scale(1.2)'}} />
 			<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
-				<div
-					style={{
-						width: 620,
-						height: 890,
-						transform: `scale(${pop})`,
-						borderRadius: 6,
-						overflow: 'hidden',
-						boxShadow: '0 30px 70px rgba(0,0,0,0.55)',
-						border: '1px solid rgba(255,255,255,0.1)',
-					}}
-				>
-					<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain', backgroundColor: NAVY_DEEP}} />
-				</div>
+				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${scale})`}} />
 			</AbsoluteFill>
 			<div
 				style={{
@@ -372,7 +348,7 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 				{insideImages.map((src, i) => (
 					<React.Fragment key={i}>
 						<TransitionSeries.Sequence durationInFrames={s2f(INSIDE_SECONDS)}>
-							<InsideBeat src={src} caption={insideCaptions[i] ?? ''} />
+							<InsideBeat src={src} caption={insideCaptions[i] ?? ''} durationInFrames={s2f(INSIDE_SECONDS)} />
 						</TransitionSeries.Sequence>
 						<TransitionSeries.Transition presentation={fade()} timing={timing} />
 					</React.Fragment>
