@@ -35,7 +35,7 @@ const s2f = (s: number) => Math.round(s * FPS);
 
 const HOOK_SECONDS = 3.8;
 const COVER_SECONDS = 4.2;
-const INSIDE_SECONDS = 3.2;
+const INSIDE_SECONDS = 5.0;
 const SUMMARY_SECONDS = 3.4;
 const AUDIENCE_SECONDS = 2.8;
 const CTA_SECONDS = 3.8;
