@@ -23,6 +23,7 @@ import {BrightBloomTeaserAd, calculateBrightBloomTeaserMetadata, brightBloomTeas
 import {HandbagShowcaseAd, calculateHandbagShowcaseMetadata, handbagShowcaseSchema} from './HandbagShowcaseAd';
 import {QuickCaptionAd, calculateQuickCaptionMetadata, quickCaptionSchema} from './QuickCaptionAd';
 import {BookPromoAd, calculateBookPromoMetadata, bookPromoSchema} from './BookPromoAd';
+import {Projekt46BikesAd, calculateProjekt46Metadata, projekt46Schema} from './Projekt46BikesAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -523,6 +524,23 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateBookPromoMetadata}
+			/>
+			<Composition
+				id="Projekt46BikesAd"
+				component={Projekt46BikesAd}
+				durationInFrames={17 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={projekt46Schema}
+				defaultProps={{
+					videoSrc: '',
+					brand: 'PROJEKT 46 BIKES',
+					tagline: 'BUILT. TESTED. RIDDEN.',
+					ctaLine: 'COMING SOON',
+					music: '',
+				}}
+				calculateMetadata={calculateProjekt46Metadata}
 			/>
 		</>
 	);
