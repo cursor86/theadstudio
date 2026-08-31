@@ -20,6 +20,7 @@ export const bookPromoSchema = z.object({
 	music: z.string().optional(),
 	flashInside: z.boolean().optional(),
 	openWithFlash: z.boolean().optional(),
+	coverFirst: z.boolean().optional(),
 	hookSeconds: z.number().optional(),
 	coverSeconds: z.number().optional(),
 	summarySeconds: z.number().optional(),
@@ -361,6 +362,7 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 	music,
 	flashInside,
 	openWithFlash,
+	coverFirst,
 	hookSeconds,
 	coverSeconds,
 	summarySeconds,
@@ -376,24 +378,29 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 	const audienceDuration = s2f(audienceSeconds ?? AUDIENCE_SECONDS);
 	const ctaDuration = s2f(ctaSeconds ?? CTA_SECONDS);
 
-	const hookAndCover = (
-		<>
+	const hookOnly = (
+		<React.Fragment key="hook">
 			<TransitionSeries.Sequence durationInFrames={hookDuration}>
 				<HookBeat text={hookLine} />
 			</TransitionSeries.Sequence>
 			<TransitionSeries.Transition presentation={fade()} timing={timing} />
+		</React.Fragment>
+	);
 
+	const coverOnly = (
+		<React.Fragment key="cover">
 			<TransitionSeries.Sequence durationInFrames={coverDuration}>
 				<CoverBeat src={coverImage} durationInFrames={coverDuration} />
 			</TransitionSeries.Sequence>
 			<TransitionSeries.Transition presentation={fade()} timing={timing} />
-		</>
+		</React.Fragment>
 	);
 
 	// A quiet fade-in reads well once someone's already watching, but it's a
 	// dead first second in a feed. openWithFlash puts the fast page-flash
 	// montage at frame 0 instead, so there's motion and color before anyone
-	// can scroll past, then settles into the hook/cover as normal.
+	// can scroll past. coverFirst instead leads with the cover art itself,
+	// straight into the flash montage, and moves the hook line after.
 	const insideBeats = insideImages.map((src, i) => (
 		<React.Fragment key={i}>
 			<TransitionSeries.Sequence durationInFrames={insideDuration}>
@@ -403,12 +410,16 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 		</React.Fragment>
 	));
 
+	const opening = coverFirst
+		? [coverOnly, insideBeats, hookOnly]
+		: openWithFlash
+			? [insideBeats, hookOnly, coverOnly]
+			: [hookOnly, coverOnly, insideBeats];
+
 	return (
 		<AbsoluteFill style={{backgroundColor: NAVY_DEEP}}>
 			<TransitionSeries>
-				{openWithFlash ? insideBeats : hookAndCover}
-				{openWithFlash ? hookAndCover : null}
-				{openWithFlash ? null : insideBeats}
+				{opening}
 
 				{summarySlides.map((slide, i) => (
 					<React.Fragment key={i}>
