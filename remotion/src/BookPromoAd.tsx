@@ -19,6 +19,7 @@ export const bookPromoSchema = z.object({
 	shopLine: z.string(),
 	music: z.string().optional(),
 	flashInside: z.boolean().optional(),
+	openWithFlash: z.boolean().optional(),
 	hookSeconds: z.number().optional(),
 	coverSeconds: z.number().optional(),
 	summarySeconds: z.number().optional(),
@@ -359,6 +360,7 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 	shopLine,
 	music,
 	flashInside,
+	openWithFlash,
 	hookSeconds,
 	coverSeconds,
 	summarySeconds,
@@ -374,27 +376,39 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 	const audienceDuration = s2f(audienceSeconds ?? AUDIENCE_SECONDS);
 	const ctaDuration = s2f(ctaSeconds ?? CTA_SECONDS);
 
+	const hookAndCover = (
+		<>
+			<TransitionSeries.Sequence durationInFrames={hookDuration}>
+				<HookBeat text={hookLine} />
+			</TransitionSeries.Sequence>
+			<TransitionSeries.Transition presentation={fade()} timing={timing} />
+
+			<TransitionSeries.Sequence durationInFrames={coverDuration}>
+				<CoverBeat src={coverImage} durationInFrames={coverDuration} />
+			</TransitionSeries.Sequence>
+			<TransitionSeries.Transition presentation={fade()} timing={timing} />
+		</>
+	);
+
+	// A quiet fade-in reads well once someone's already watching, but it's a
+	// dead first second in a feed. openWithFlash puts the fast page-flash
+	// montage at frame 0 instead, so there's motion and color before anyone
+	// can scroll past, then settles into the hook/cover as normal.
+	const insideBeats = insideImages.map((src, i) => (
+		<React.Fragment key={i}>
+			<TransitionSeries.Sequence durationInFrames={insideDuration}>
+				<InsideBeat src={src} caption={insideCaptions[i] ?? ''} durationInFrames={insideDuration} flash={flashInside} />
+			</TransitionSeries.Sequence>
+			<TransitionSeries.Transition presentation={fade()} timing={timing} />
+		</React.Fragment>
+	));
+
 	return (
 		<AbsoluteFill style={{backgroundColor: NAVY_DEEP}}>
 			<TransitionSeries>
-				<TransitionSeries.Sequence durationInFrames={hookDuration}>
-					<HookBeat text={hookLine} />
-				</TransitionSeries.Sequence>
-				<TransitionSeries.Transition presentation={fade()} timing={timing} />
-
-				<TransitionSeries.Sequence durationInFrames={coverDuration}>
-					<CoverBeat src={coverImage} durationInFrames={coverDuration} />
-				</TransitionSeries.Sequence>
-				<TransitionSeries.Transition presentation={fade()} timing={timing} />
-
-				{insideImages.map((src, i) => (
-					<React.Fragment key={i}>
-						<TransitionSeries.Sequence durationInFrames={insideDuration}>
-							<InsideBeat src={src} caption={insideCaptions[i] ?? ''} durationInFrames={insideDuration} flash={flashInside} />
-						</TransitionSeries.Sequence>
-						<TransitionSeries.Transition presentation={fade()} timing={timing} />
-					</React.Fragment>
-				))}
+				{openWithFlash ? insideBeats : hookAndCover}
+				{openWithFlash ? hookAndCover : null}
+				{openWithFlash ? null : insideBeats}
 
 				{summarySlides.map((slide, i) => (
 					<React.Fragment key={i}>
