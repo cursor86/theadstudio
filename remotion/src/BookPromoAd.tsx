@@ -18,6 +18,12 @@ export const bookPromoSchema = z.object({
 	ctaLine: z.string(),
 	shopLine: z.string(),
 	music: z.string().optional(),
+	flashInside: z.boolean().optional(),
+	hookSeconds: z.number().optional(),
+	coverSeconds: z.number().optional(),
+	summarySeconds: z.number().optional(),
+	audienceSeconds: z.number().optional(),
+	ctaSeconds: z.number().optional(),
 });
 
 export type BookPromoProps = z.infer<typeof bookPromoSchema>;
@@ -36,6 +42,7 @@ const s2f = (s: number) => Math.round(s * FPS);
 const HOOK_SECONDS = 3.8;
 const COVER_SECONDS = 4.2;
 const INSIDE_SECONDS = 5.0;
+const FLASH_INSIDE_SECONDS = 0.9;
 const SUMMARY_SECONDS = 3.4;
 const AUDIENCE_SECONDS = 2.8;
 const CTA_SECONDS = 3.8;
@@ -149,11 +156,34 @@ const CoverBeat: React.FC<{src: string; durationInFrames: number}> = ({src, dura
 	);
 };
 
-const InsideBeat: React.FC<{src: string; caption: string; durationInFrames: number}> = ({src, caption, durationInFrames}) => {
+const InsideBeat: React.FC<{src: string; caption: string; durationInFrames: number; flash?: boolean}> = ({
+	src,
+	caption,
+	durationInFrames,
+	flash,
+}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const scale = interpolate(frame, [0, durationInFrames], [1.0, 1.05], {extrapolateRight: 'clamp'});
 	const capIn = spring({frame: frame - 6, fps, from: 0, to: 1, config: {damping: 15, mass: 0.6}});
+
+	// Fast full-page reveal: a quick punch-in plus a white flash pop at the
+	// start of every cut instead of a caption, so a whole run of pages reads
+	// as a rapid-fire flash montage rather than individually-read slides.
+	if (flash) {
+		const punch = spring({frame, fps, from: 1.08, to: 1, config: {damping: 13, mass: 0.5}});
+		const flashOpacity = interpolate(frame, [0, 4], [1, 0], {extrapolateRight: 'clamp'});
+		return (
+			<AbsoluteFill style={{backgroundColor: NAVY_DEEP, overflow: 'hidden'}}>
+				<Img src={src} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(38px) brightness(0.35)', transform: 'scale(1.2)'}} />
+				<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+					<Img src={src} style={{width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${punch})`}} />
+				</AbsoluteFill>
+				<AbsoluteFill style={{background: CREAM, opacity: flashOpacity}} />
+			</AbsoluteFill>
+		);
+	}
+
 	return (
 		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, overflow: 'hidden'}}>
 			<Img src={src} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(38px) brightness(0.35)', transform: 'scale(1.2)'}} />
@@ -328,27 +358,39 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 	ctaLine,
 	shopLine,
 	music,
+	flashInside,
+	hookSeconds,
+	coverSeconds,
+	summarySeconds,
+	audienceSeconds,
+	ctaSeconds,
 }) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const timing = linearTiming({durationInFrames: transitionFrames});
+	const insideDuration = flashInside ? s2f(FLASH_INSIDE_SECONDS) : s2f(INSIDE_SECONDS);
+	const hookDuration = s2f(hookSeconds ?? HOOK_SECONDS);
+	const coverDuration = s2f(coverSeconds ?? COVER_SECONDS);
+	const summaryDuration = s2f(summarySeconds ?? SUMMARY_SECONDS);
+	const audienceDuration = s2f(audienceSeconds ?? AUDIENCE_SECONDS);
+	const ctaDuration = s2f(ctaSeconds ?? CTA_SECONDS);
 
 	return (
 		<AbsoluteFill style={{backgroundColor: NAVY_DEEP}}>
 			<TransitionSeries>
-				<TransitionSeries.Sequence durationInFrames={s2f(HOOK_SECONDS)}>
+				<TransitionSeries.Sequence durationInFrames={hookDuration}>
 					<HookBeat text={hookLine} />
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={fade()} timing={timing} />
 
-				<TransitionSeries.Sequence durationInFrames={s2f(COVER_SECONDS)}>
-					<CoverBeat src={coverImage} durationInFrames={s2f(COVER_SECONDS)} />
+				<TransitionSeries.Sequence durationInFrames={coverDuration}>
+					<CoverBeat src={coverImage} durationInFrames={coverDuration} />
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={fade()} timing={timing} />
 
 				{insideImages.map((src, i) => (
 					<React.Fragment key={i}>
-						<TransitionSeries.Sequence durationInFrames={s2f(INSIDE_SECONDS)}>
-							<InsideBeat src={src} caption={insideCaptions[i] ?? ''} durationInFrames={s2f(INSIDE_SECONDS)} />
+						<TransitionSeries.Sequence durationInFrames={insideDuration}>
+							<InsideBeat src={src} caption={insideCaptions[i] ?? ''} durationInFrames={insideDuration} flash={flashInside} />
 						</TransitionSeries.Sequence>
 						<TransitionSeries.Transition presentation={fade()} timing={timing} />
 					</React.Fragment>
@@ -356,19 +398,19 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 
 				{summarySlides.map((slide, i) => (
 					<React.Fragment key={i}>
-						<TransitionSeries.Sequence durationInFrames={s2f(SUMMARY_SECONDS)}>
+						<TransitionSeries.Sequence durationInFrames={summaryDuration}>
 							<SummaryBeat title={slide.title} items={slide.items} />
 						</TransitionSeries.Sequence>
 						<TransitionSeries.Transition presentation={fade()} timing={timing} />
 					</React.Fragment>
 				))}
 
-				<TransitionSeries.Sequence durationInFrames={s2f(AUDIENCE_SECONDS)}>
+				<TransitionSeries.Sequence durationInFrames={audienceDuration}>
 					<AudienceBeat text={audienceLine} />
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={fade()} timing={timing} />
 
-				<TransitionSeries.Sequence durationInFrames={s2f(CTA_SECONDS)}>
+				<TransitionSeries.Sequence durationInFrames={ctaDuration}>
 					<CtaBeat coverImage={coverImage} ctaLine={ctaLine} shopLine={shopLine} />
 				</TransitionSeries.Sequence>
 			</TransitionSeries>
@@ -381,14 +423,15 @@ export const calculateBookPromoMetadata = ({props}: {props: BookPromoProps}) => 
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const insideCount = props.insideImages?.length ?? 3;
 	const summaryCount = props.summarySlides?.length ?? 2;
+	const insideSeconds = props.flashInside ? FLASH_INSIDE_SECONDS : INSIDE_SECONDS;
 	const segments = 3 + insideCount + summaryCount; // hook + cover + inside* + summary* + audience + cta
 	const total =
-		s2f(HOOK_SECONDS) +
-		s2f(COVER_SECONDS) +
-		insideCount * s2f(INSIDE_SECONDS) +
-		summaryCount * s2f(SUMMARY_SECONDS) +
-		s2f(AUDIENCE_SECONDS) +
-		s2f(CTA_SECONDS) -
+		s2f(props.hookSeconds ?? HOOK_SECONDS) +
+		s2f(props.coverSeconds ?? COVER_SECONDS) +
+		insideCount * s2f(insideSeconds) +
+		summaryCount * s2f(props.summarySeconds ?? SUMMARY_SECONDS) +
+		s2f(props.audienceSeconds ?? AUDIENCE_SECONDS) +
+		s2f(props.ctaSeconds ?? CTA_SECONDS) -
 		transitionFrames * (segments - 1);
 	return {durationInFrames: total};
 };
