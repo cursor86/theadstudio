@@ -26,6 +26,7 @@ export const bookPromoSchema = z.object({
 	summarySeconds: z.number().optional(),
 	audienceSeconds: z.number().optional(),
 	ctaSeconds: z.number().optional(),
+	flashSeconds: z.number().optional(),
 });
 
 export type BookPromoProps = z.infer<typeof bookPromoSchema>;
@@ -368,10 +369,11 @@ export const BookPromoAd: React.FC<BookPromoProps> = ({
 	summarySeconds,
 	audienceSeconds,
 	ctaSeconds,
+	flashSeconds,
 }) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const timing = linearTiming({durationInFrames: transitionFrames});
-	const insideDuration = flashInside ? s2f(FLASH_INSIDE_SECONDS) : s2f(INSIDE_SECONDS);
+	const insideDuration = flashInside ? s2f(flashSeconds ?? FLASH_INSIDE_SECONDS) : s2f(INSIDE_SECONDS);
 	const hookDuration = s2f(hookSeconds ?? HOOK_SECONDS);
 	const coverDuration = s2f(coverSeconds ?? COVER_SECONDS);
 	const summaryDuration = s2f(summarySeconds ?? SUMMARY_SECONDS);
@@ -448,7 +450,7 @@ export const calculateBookPromoMetadata = ({props}: {props: BookPromoProps}) => 
 	const transitionFrames = s2f(TRANSITION_SECONDS);
 	const insideCount = props.insideImages?.length ?? 3;
 	const summaryCount = props.summarySlides?.length ?? 2;
-	const insideSeconds = props.flashInside ? FLASH_INSIDE_SECONDS : INSIDE_SECONDS;
+	const insideSeconds = props.flashInside ? props.flashSeconds ?? FLASH_INSIDE_SECONDS : INSIDE_SECONDS;
 	const segments = 3 + insideCount + summaryCount; // hook + cover + inside* + summary* + audience + cta
 	const total =
 		s2f(props.hookSeconds ?? HOOK_SECONDS) +
