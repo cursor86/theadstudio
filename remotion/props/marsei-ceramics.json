@@ -1,0 +1,24 @@
+{
+  "logoPath": "/absolute/path/logo.png",
+  "brand": "MarSei Ceramics",
+  "about": [
+    "Martina & Jakub",
+    "Full-time potters making small-batch ceramics in the Czech Republic"
+  ],
+  "inspiration": "Inspired by a love for coastal tide pools and ancient textiles. Hand-glazed, and fired to stoneware perfection.",
+  "images": [
+    "/absolute/path/img1.png",
+    "/absolute/path/img2.png",
+    "/absolute/path/img4.png",
+    "/absolute/path/img5.png"
+  ],
+  "captions": [
+    "Nested Bowls, Hand-Thrown",
+    "Ombre Mugs, Hand-Painted",
+    "The Glaze Fusion Collection",
+    "Made to Be Lived With"
+  ],
+  "cta": "Shop the Collection",
+  "link": "marseiceramics.cz",
+  "music": "/absolute/path/to/music.mp3"
+}

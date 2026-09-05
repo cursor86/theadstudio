@@ -112,15 +112,29 @@ const ItemCard: React.FC<{label: string; text: string; image?: string}> = ({labe
 		<AbsoluteFill style={{background: '#0c0c14'}}>
 			{image ? (
 				<>
+					{/* Blurred cover-fit backdrop fills the frame; a full contain-fit copy on
+					top keeps the whole source image visible instead of cropping its edges. */}
 					<Img
 						src={image}
-						style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover'}}
+						style={{
+							position: 'absolute',
+							inset: 0,
+							width: '100%',
+							height: '100%',
+							objectFit: 'cover',
+							filter: 'blur(50px) brightness(0.55)',
+							transform: 'scale(1.15)',
+						}}
+					/>
+					<Img
+						src={image}
+						style={{position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain'}}
 					/>
 					<div
 						style={{
 							position: 'absolute',
 							inset: 0,
-							background: 'linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.85) 100%)',
+							background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.85) 100%)',
 						}}
 					/>
 				</>

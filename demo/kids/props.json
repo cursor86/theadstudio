@@ -1,0 +1,14 @@
+{
+  "title": "Build. Imagine. Play.",
+  "features": ["Boosts Creativity", "100% Non-Toxic Materials", "150-Piece Gift-Ready Set"],
+  "cta": "Shop Now",
+  "link": "brightbuddies.example",
+  "images": [
+    "../demo/kids/assets/hero.png",
+    "../demo/kids/assets/feature1.png",
+    "../demo/kids/assets/feature2.png",
+    "../demo/kids/assets/feature3.png"
+  ],
+  "music": "/absolute/path/to/music.mp3",
+  "logoPath": ""
+}

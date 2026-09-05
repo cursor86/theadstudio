@@ -40,10 +40,44 @@ props.music = copyIntoPublic(props.music, 'music');
 props.logoPath = props.logoPath ? copyIntoPublic(props.logoPath, 'logo') : '';
 props.heroImage = props.heroImage ? copyIntoPublic(props.heroImage, 'hero') : '';
 props.productImage = props.productImage ? copyIntoPublic(props.productImage, 'product') : '';
+props.videoSrc = props.videoSrc ? copyIntoPublic(props.videoSrc, 'video') : '';
+props.marketImage = props.marketImage ? copyIntoPublic(props.marketImage, 'market') : '';
+props.toteCloseupImage = props.toteCloseupImage ? copyIntoPublic(props.toteCloseupImage, 'tote') : '';
+props.collectionImage = props.collectionImage ? copyIntoPublic(props.collectionImage, 'collection') : '';
+props.lifestyleImage = props.lifestyleImage ? copyIntoPublic(props.lifestyleImage, 'lifestyle') : '';
+props.adImage = props.adImage ? copyIntoPublic(props.adImage, 'ad') : '';
+props.exclusiveImage = props.exclusiveImage ? copyIntoPublic(props.exclusiveImage, 'exclusive') : '';
+props.fabricsImage = props.fabricsImage ? copyIntoPublic(props.fabricsImage, 'fabrics') : '';
+props.finalImage = props.finalImage ? copyIntoPublic(props.finalImage, 'final') : '';
+if (Array.isArray(props.provideImages)) {
+	props.provideImages = props.provideImages.map((p, i) => copyIntoPublic(p, `provide${i}`));
+}
+props.coverImage = props.coverImage ? copyIntoPublic(props.coverImage, 'cover') : '';
+props.bonusImage = props.bonusImage ? copyIntoPublic(props.bonusImage, 'bonus') : '';
+if (Array.isArray(props.insideImages)) {
+	props.insideImages = props.insideImages.map((p, i) => copyIntoPublic(p, `inside${i}`));
+}
+if (Array.isArray(props.slides)) {
+	props.slides = props.slides.map((item, i) => (item && item.src ? {...item, src: copyIntoPublic(item.src, `slide${i}`)} : item));
+}
 if (Array.isArray(props.items)) {
 	props.items = props.items.map((item, i) =>
 		item && item.image ? {...item, image: copyIntoPublic(item.image, `item${i}`)} : item
 	);
+}
+if (Array.isArray(props.beforeImages)) {
+	props.beforeImages = props.beforeImages.map((p, i) => copyIntoPublic(p, `before${i}`));
+}
+if (Array.isArray(props.afterImages)) {
+	props.afterImages = props.afterImages.map((p, i) => copyIntoPublic(p, `after${i}`));
+}
+if (Array.isArray(props.portfolioImages)) {
+	props.portfolioImages = props.portfolioImages.map((item, i) =>
+		item && item.src ? {...item, src: copyIntoPublic(item.src, `portfolio${i}`)} : item
+	);
+}
+if (Array.isArray(props.photos)) {
+	props.photos = props.photos.map((item, i) => (item && item.src ? {...item, src: copyIntoPublic(item.src, `photo${i}`)} : item));
 }
 
 const candidateBrowserPaths = [
