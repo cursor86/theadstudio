@@ -564,6 +564,8 @@ export const RemotionRoot: React.FC = () => {
 					valueLine: 'Virtual CFO insight, without the full-time cost.',
 					cta: 'Book Your Free Consultation',
 					contact: '',
+					walletImage: '',
+					deviceImage: '',
 					music: '',
 				}}
 				calculateMetadata={calculateNewFineraMetadata}

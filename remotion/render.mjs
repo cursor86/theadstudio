@@ -76,6 +76,8 @@ if (Array.isArray(props.portfolioImages)) {
 		item && item.src ? {...item, src: copyIntoPublic(item.src, `portfolio${i}`)} : item
 	);
 }
+props.walletImage = props.walletImage ? copyIntoPublic(props.walletImage, 'wallet') : '';
+props.deviceImage = props.deviceImage ? copyIntoPublic(props.deviceImage, 'device') : '';
 if (Array.isArray(props.photos)) {
 	props.photos = props.photos.map((item, i) => (item && item.src ? {...item, src: copyIntoPublic(item.src, `photo${i}`)} : item));
 }
