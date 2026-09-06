@@ -19,6 +19,8 @@ export const newFineraSchema = z.object({
 	painLine: z.string(),
 	reliefLine: z.string(),
 	valueLine: z.string(),
+	services: z.array(z.object({title: z.string(), price: z.string(), items: z.array(z.string())})).optional(),
+	freeToolsLine: z.string().optional(),
 	cta: z.string(),
 	contact: z.string().optional(),
 	walletImage: z.string().optional(),
@@ -38,11 +40,13 @@ const SANS = '"Arial", "Helvetica Neue", sans-serif';
 
 const s2f = (s: number) => Math.round(s * FPS);
 
-const PAIN_SECONDS = 3.4;
-const DASHBOARD_SECONDS = 6.0;
-const RELIEF_SECONDS = 3.4;
-const VALUE_SECONDS = 3.0;
-const LOGO_SECONDS = 5.0;
+const PAIN_SECONDS = 4.0;
+const DASHBOARD_SECONDS = 8.0;
+const RELIEF_SECONDS = 5.2;
+const VALUE_SECONDS = 3.4;
+const SERVICE_SECONDS = 7.0;
+const FREE_TOOLS_SECONDS = 6.0;
+const LOGO_SECONDS = 6.2;
 const TRANSITION_SECONDS = 0.45;
 
 const GoldGlow: React.FC<{opacity?: number; frame: number}> = ({opacity = 1, frame}) => {
@@ -434,6 +438,124 @@ const ValueBeat: React.FC<{text: string}> = ({text}) => {
 	);
 };
 
+const ServiceBeat: React.FC<{title: string; price: string; items: string[]}> = ({title, price, items}) => {
+	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
+	const headIn = spring({frame, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
+	const priceIn = spring({frame: frame - 10, fps, from: 0, to: 1, config: {damping: 13, mass: 0.6}});
+
+	return (
+		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, alignItems: 'center', justifyContent: 'center', overflow: 'hidden'}}>
+			<AmbientTexture frame={frame} />
+			<GoldGlow opacity={0.5} frame={frame} />
+
+			<div
+				style={{
+					width: 760,
+					textAlign: 'center',
+					opacity: headIn,
+					transform: `translateY(${(1 - headIn) * 16}px)`,
+					marginBottom: 30,
+				}}
+			>
+				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 15, letterSpacing: 3, color: GOLD, marginBottom: 14}}>{title}</div>
+				<div
+					style={{
+						display: 'inline-block',
+						fontFamily: SANS,
+						fontWeight: 800,
+						fontSize: 40,
+						color: CREAM,
+						opacity: priceIn,
+						transform: `scale(${0.9 + priceIn * 0.1})`,
+					}}
+				>
+					{price}
+				</div>
+			</div>
+
+			<div style={{width: 680, display: 'flex', flexDirection: 'column', gap: 14}}>
+				{items.map((item, i) => {
+					const delay = 20 + i * 9;
+					const rowIn = spring({frame: frame - delay, fps, from: 0, to: 1, config: {damping: 15, mass: 0.6}});
+					return (
+						<div
+							key={item}
+							style={{
+								display: 'flex',
+								flexDirection: 'row',
+								alignItems: 'center',
+								gap: 16,
+								padding: '15px 24px',
+								borderRadius: 12,
+								background: `${CREAM}0a`,
+								border: `1px solid ${GOLD}33`,
+								opacity: rowIn,
+								transform: `translateX(${(1 - rowIn) * -22}px)`,
+							}}
+						>
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{flexShrink: 0}}>
+								<path d="M4 12.5L9.5 18L20 6" stroke={GOLD} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+							</svg>
+							<span style={{fontFamily: SANS, fontWeight: 600, fontSize: 20, color: CREAM}}>{item}</span>
+						</div>
+					);
+				})}
+			</div>
+		</AbsoluteFill>
+	);
+};
+
+const FreeToolsBeat: React.FC<{text: string}> = ({text}) => {
+	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
+	const in_ = spring({frame, fps, from: 0, to: 1, config: {damping: 15, mass: 0.7}});
+	const tools = ['Tax Calculators', 'Salary Guides', 'Financial Articles'];
+
+	return (
+		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, alignItems: 'center', justifyContent: 'center', overflow: 'hidden'}}>
+			<AmbientTexture frame={frame} />
+			<GoldGlow opacity={0.5} frame={frame} />
+
+			<div style={{fontFamily: SANS, fontWeight: 700, fontSize: 15, letterSpacing: 4, color: GOLD, marginBottom: 26}}>NOT READY TO TALK YET?</div>
+
+			<div style={{display: 'flex', flexDirection: 'row', gap: 22, marginBottom: 34}}>
+				{tools.map((tool, i) => {
+					const toolIn = spring({frame: frame - 8 - i * 8, fps, from: 0, to: 1, config: {damping: 14, mass: 0.6}});
+					return (
+						<div
+							key={tool}
+							style={{
+								padding: '20px 22px',
+								width: 190,
+								borderRadius: 14,
+								background: `${CREAM}0a`,
+								border: `1px solid ${GOLD}33`,
+								textAlign: 'center',
+								opacity: toolIn,
+								transform: `translateY(${(1 - toolIn) * 20}px)`,
+							}}
+						>
+							<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 18, color: CREAM}}>{tool}</span>
+						</div>
+					);
+				})}
+			</div>
+
+			<div
+				style={{
+					textAlign: 'center',
+					padding: '0 100px',
+					opacity: in_,
+					transform: `translateY(${(1 - in_) * 14}px)`,
+				}}
+			>
+				<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 24, color: CREAM}}>{text}</span>
+			</div>
+		</AbsoluteFill>
+	);
+};
+
 const LogoBeat: React.FC<{brand: string; tagline: string; cta: string; contact?: string}> = ({brand, tagline, cta, contact}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
@@ -509,6 +631,8 @@ export const NewFineraAd: React.FC<NewFineraProps> = ({
 	painLine,
 	reliefLine,
 	valueLine,
+	services,
+	freeToolsLine,
 	cta,
 	contact,
 	walletImage,
@@ -516,6 +640,7 @@ export const NewFineraAd: React.FC<NewFineraProps> = ({
 	music,
 }) => {
 	const timing = linearTiming({durationInFrames: s2f(TRANSITION_SECONDS)});
+	const svcs = services ?? [];
 
 	return (
 		<AbsoluteFill style={{backgroundColor: NAVY_DEEP}}>
@@ -530,7 +655,7 @@ export const NewFineraAd: React.FC<NewFineraProps> = ({
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={wipe({direction: 'from-left'})} timing={timing} />
 
-				<TransitionSeries.Sequence durationInFrames={s2f(1.6)}>
+				<TransitionSeries.Sequence durationInFrames={s2f(1.8)}>
 					<MessyBookBeat />
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={wipe({direction: 'from-left'})} timing={timing} />
@@ -545,6 +670,25 @@ export const NewFineraAd: React.FC<NewFineraProps> = ({
 				</TransitionSeries.Sequence>
 				<TransitionSeries.Transition presentation={fade()} timing={timing} />
 
+				{svcs.map((service, i) => (
+					<React.Fragment key={service.title}>
+						<TransitionSeries.Sequence durationInFrames={s2f(SERVICE_SECONDS)}>
+							<ServiceBeat title={service.title} price={service.price} items={service.items} />
+						</TransitionSeries.Sequence>
+						{i < svcs.length - 1 ? <TransitionSeries.Transition presentation={fade()} timing={timing} /> : null}
+					</React.Fragment>
+				))}
+				{svcs.length > 0 ? <TransitionSeries.Transition presentation={fade()} timing={timing} /> : null}
+
+				{freeToolsLine ? (
+					<>
+						<TransitionSeries.Sequence durationInFrames={s2f(FREE_TOOLS_SECONDS)}>
+							<FreeToolsBeat text={freeToolsLine} />
+						</TransitionSeries.Sequence>
+						<TransitionSeries.Transition presentation={fade()} timing={timing} />
+					</>
+				) : null}
+
 				<TransitionSeries.Sequence durationInFrames={s2f(LOGO_SECONDS)}>
 					<LogoBeat brand={brand} tagline={tagline} cta={cta} contact={contact} />
 				</TransitionSeries.Sequence>
@@ -554,10 +698,20 @@ export const NewFineraAd: React.FC<NewFineraProps> = ({
 	);
 };
 
-export const calculateNewFineraMetadata = () => {
+export const calculateNewFineraMetadata = ({props}: {props: NewFineraProps}) => {
 	const transitionFrames = s2f(TRANSITION_SECONDS);
-	const segments = 6;
+	const serviceCount = props.services?.length ?? 0;
+	const hasFreeTools = Boolean(props.freeToolsLine);
+	const segments = 6 + serviceCount + (hasFreeTools ? 1 : 0);
 	const total =
-		s2f(PAIN_SECONDS) + s2f(DASHBOARD_SECONDS) + s2f(1.6) + s2f(RELIEF_SECONDS) + s2f(VALUE_SECONDS) + s2f(LOGO_SECONDS) - transitionFrames * (segments - 1);
+		s2f(PAIN_SECONDS) +
+		s2f(DASHBOARD_SECONDS) +
+		s2f(1.8) +
+		s2f(RELIEF_SECONDS) +
+		s2f(VALUE_SECONDS) +
+		serviceCount * s2f(SERVICE_SECONDS) +
+		(hasFreeTools ? s2f(FREE_TOOLS_SECONDS) : 0) +
+		s2f(LOGO_SECONDS) -
+		transitionFrames * (segments - 1);
 	return {durationInFrames: total};
 };

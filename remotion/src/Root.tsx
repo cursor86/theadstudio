@@ -562,6 +562,19 @@ export const RemotionRoot: React.FC = () => {
 					painLine: 'Manual books. Missed deadlines. No time to look ahead.',
 					reliefLine: 'Your books. Handled.',
 					valueLine: 'Virtual CFO insight, without the full-time cost.',
+					services: [
+						{
+							title: 'BOOKKEEPING & SYSTEMS SETUP',
+							price: 'From $350/month',
+							items: ['Chart of accounts setup', 'Xero or MYOB management', 'Monthly bank reconciliation', 'Accounts payable/receivable tracking'],
+						},
+						{
+							title: 'VIRTUAL CFO & MANAGEMENT ACCOUNTS',
+							price: 'From $750/month',
+							items: ['Monthly management accounts', 'Cash flow forecasting', 'Budget vs. actual analysis', 'KPI dashboard + monthly review call'],
+						},
+					],
+					freeToolsLine: 'Free tax calculators, salary guides, and financial articles — no strings attached.',
 					cta: 'Book Your Free Consultation',
 					contact: '',
 					walletImage: '',
