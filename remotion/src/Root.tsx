@@ -24,6 +24,7 @@ import {HandbagShowcaseAd, calculateHandbagShowcaseMetadata, handbagShowcaseSche
 import {QuickCaptionAd, calculateQuickCaptionMetadata, quickCaptionSchema} from './QuickCaptionAd';
 import {BookPromoAd, calculateBookPromoMetadata, bookPromoSchema} from './BookPromoAd';
 import {Projekt46BikesAd, calculateProjekt46Metadata, projekt46Schema} from './Projekt46BikesAd';
+import {NewFineraAd, calculateNewFineraMetadata, newFineraSchema} from './NewFineraAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -541,6 +542,31 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateProjekt46Metadata}
+			/>
+			<Composition
+				id="NewFineraAd"
+				component={NewFineraAd}
+				durationInFrames={20 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={newFineraSchema}
+				defaultProps={{
+					brand: 'NewFinera',
+					tagline: 'Bookkeeping & Virtual CFO for growing businesses.',
+					kpis: [
+						{label: 'Revenue', value: '$128K'},
+						{label: 'Expenses', value: '$54K'},
+						{label: 'Net Cash Flow', value: '+$21K'},
+					],
+					painLine: 'Manual books. Missed deadlines. No time to look ahead.',
+					reliefLine: 'Your books. Handled.',
+					valueLine: 'Virtual CFO insight, without the full-time cost.',
+					cta: 'Book Your Free Consultation',
+					contact: '',
+					music: '',
+				}}
+				calculateMetadata={calculateNewFineraMetadata}
 			/>
 		</>
 	);
