@@ -25,6 +25,7 @@ import {QuickCaptionAd, calculateQuickCaptionMetadata, quickCaptionSchema} from 
 import {BookPromoAd, calculateBookPromoMetadata, bookPromoSchema} from './BookPromoAd';
 import {Projekt46BikesAd, calculateProjekt46Metadata, projekt46Schema} from './Projekt46BikesAd';
 import {NewFineraAd, calculateNewFineraMetadata, newFineraSchema} from './NewFineraAd';
+import {MomsCommunityAd, calculateMomsCommunityMetadata, momsCommunitySchema} from './MomsCommunityAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -582,6 +583,28 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateNewFineraMetadata}
+			/>
+			<Composition
+				id="MomsCommunityAd"
+				component={MomsCommunityAd}
+				durationInFrames={30 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={momsCommunitySchema}
+				defaultProps={{
+					bannerText: "Let's Build a Community of Love, Support, and Growing Together!",
+					headline: 'CALLING ALL MOTHERS & STAY-AT-HOME MOMS!',
+					scriptMessage: 'Building their small business & showing their talents in the beautiful things they make.',
+					ctaLine: 'Then find ONE other mom-owned business in the comments and show them some love.',
+					ctaHighlight: 'ONE',
+					brand: 'theadzstudio',
+					tagline: 'Creative Digital Solutions',
+					footerLine: "Tag a mom-owned business below, and we'll feature it.",
+					music: '',
+					musicVolume: 0.5,
+				}}
+				calculateMetadata={calculateMomsCommunityMetadata}
 			/>
 		</>
 	);
