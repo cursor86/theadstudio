@@ -125,12 +125,12 @@ const PainBeat: React.FC<{text: string; image: string}> = ({text, image}) => {
 		<AbsoluteFill style={{backgroundColor: NAVY_DEEP, alignItems: 'center', justifyContent: 'center', overflow: 'hidden'}}>
 			<KenBurns src={image} frame={frame} durationInFrames={s2f(PAIN_SECONDS)} darken={0.72} pan="right" />
 			<AmbientTexture frame={frame} />
-			<div style={{textAlign: 'center', padding: '0 90px', position: 'relative'}}>
+			<div style={{textAlign: 'center', padding: '0 70px', position: 'relative'}}>
 				<div
 					style={{
 						fontFamily: SANS,
 						fontWeight: 700,
-						fontSize: 15,
+						fontSize: 19,
 						letterSpacing: 5,
 						color: GOLD,
 						marginBottom: 24,
@@ -139,7 +139,7 @@ const PainBeat: React.FC<{text: string; image: string}> = ({text, image}) => {
 				>
 					SOUND FAMILIAR?
 				</div>
-				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 46, lineHeight: 1.3, color: CREAM, flexWrap: 'wrap', display: 'flex', justifyContent: 'center', rowGap: 4}}>
+				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 56, lineHeight: 1.28, color: CREAM, flexWrap: 'wrap', display: 'flex', justifyContent: 'center', rowGap: 6}}>
 					{words.map((word, i) => {
 						const delay = 6 + i * 3.5;
 						const wIn = spring({frame: frame - delay, fps, from: 0, to: 1, config: {damping: 14, mass: 0.5}});
@@ -246,10 +246,10 @@ const DashboardBeat: React.FC<{brand: string; kpis: {label: string; value: strin
 			<div
 				style={{
 					position: 'absolute',
-					top: 90,
+					top: 86,
 					fontFamily: SANS,
 					fontWeight: 800,
-					fontSize: 22,
+					fontSize: 27,
 					letterSpacing: 1,
 				}}
 			>
@@ -259,7 +259,7 @@ const DashboardBeat: React.FC<{brand: string; kpis: {label: string; value: strin
 
 			<div
 				style={{
-					width: 780,
+					width: 820,
 					borderRadius: 22,
 					background: `${NAVY}e6`,
 					backdropFilter: 'blur(6px)',
@@ -271,7 +271,7 @@ const DashboardBeat: React.FC<{brand: string; kpis: {label: string; value: strin
 				}}
 			>
 				<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 26}}>
-					<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 15, letterSpacing: 3, color: GOLD}}>LIVE FINANCIAL SNAPSHOT</span>
+					<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 18, letterSpacing: 3, color: GOLD}}>LIVE FINANCIAL SNAPSHOT</span>
 					<span style={{width: 8, height: 8, borderRadius: 4, background: '#5FE39A', boxShadow: '0 0 10px #5FE39A'}} />
 				</div>
 
@@ -279,11 +279,11 @@ const DashboardBeat: React.FC<{brand: string; kpis: {label: string; value: strin
 					<BarChart frame={frame} />
 					<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
 						<LineChart frame={frame} />
-						<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 11, letterSpacing: 2, color: `${CREAM}77`}}>12-MO TREND</span>
+						<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 13, letterSpacing: 2, color: `${CREAM}77`}}>12-MO TREND</span>
 					</div>
 					<div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
 						<DonutChart frame={frame} />
-						<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 11, letterSpacing: 2, color: `${CREAM}77`}}>MARGIN</span>
+						<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 13, letterSpacing: 2, color: `${CREAM}77`}}>MARGIN</span>
 					</div>
 				</div>
 
@@ -307,8 +307,8 @@ const DashboardBeat: React.FC<{brand: string; kpis: {label: string; value: strin
 									transform: `translateX(${(1 - rowIn) * -20}px)`,
 								}}
 							>
-								<span style={{fontFamily: SANS, fontWeight: 600, fontSize: 22, color: `${CREAM}cc`}}>{row.label}</span>
-								<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 26, color: GOLD_LIGHT}}>{kpi?.value ?? ''}</span>
+								<span style={{fontFamily: SANS, fontWeight: 600, fontSize: 26, color: `${CREAM}cc`}}>{row.label}</span>
+								<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 30, color: GOLD_LIGHT}}>{kpi?.value ?? ''}</span>
 							</div>
 						);
 					})}
@@ -363,17 +363,17 @@ const ReliefBeat: React.FC<{text: string; image: string}> = ({text, image}) => {
 			<KenBurns src={image} frame={frame} durationInFrames={s2f(RELIEF_SECONDS)} darken={0.68} pan="right" />
 			<AmbientTexture frame={frame} />
 			<GoldGlow opacity={0.4} frame={frame} />
-			<div style={{position: 'absolute', top: 130, fontFamily: SANS, fontWeight: 700, fontSize: 16, letterSpacing: 4, color: GOLD}}>AFTER</div>
-			<div style={{position: 'relative', zIndex: 1, width: 680, display: 'flex', flexDirection: 'column', gap: 22, marginBottom: 60}}>
+			<div style={{position: 'absolute', top: 120, fontFamily: SANS, fontWeight: 700, fontSize: 18, letterSpacing: 4, color: GOLD}}>AFTER</div>
+			<div style={{position: 'relative', zIndex: 1, width: 740, display: 'flex', flexDirection: 'column', gap: 26, marginBottom: 60}}>
 				{rows.map((row, i) => {
 					const rowIn = spring({frame: frame - i * 6, fps, from: 0, to: 1, config: {damping: 18, mass: 0.45}});
 					const checkIn = spring({frame: frame - i * 6 - 6, fps, from: 0, to: 1, config: {damping: 13, mass: 0.4}});
 					return (
-						<div key={row.label} style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 18}}>
+						<div key={row.label} style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 20}}>
 							<div
 								style={{
-									width: 32,
-									height: 32,
+									width: 38,
+									height: 38,
 									borderRadius: '50%',
 									background: GOLD,
 									flexShrink: 0,
@@ -384,18 +384,18 @@ const ReliefBeat: React.FC<{text: string; image: string}> = ({text, image}) => {
 									boxShadow: `0 0 14px ${GOLD}88`,
 								}}
 							>
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+								<svg width="19" height="19" viewBox="0 0 24 24" fill="none">
 									<path d="M4 12.5L9.5 18L20 6" stroke={NAVY_DEEP} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
 								</svg>
 							</div>
-							<div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 9}}>
-								<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 26, color: CREAM}}>{row.label}</span>
-								<div style={{height: 10, borderRadius: 5, background: `${CREAM}1a`, overflow: 'hidden'}}>
+							<div style={{flex: 1, display: 'flex', flexDirection: 'column', gap: 10}}>
+								<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 32, color: CREAM}}>{row.label}</span>
+								<div style={{height: 12, borderRadius: 6, background: `${CREAM}1a`, overflow: 'hidden'}}>
 									<div
 										style={{
 											height: '100%',
 											width: `${100 * rowIn}%`,
-											borderRadius: 5,
+											borderRadius: 6,
 											background: `linear-gradient(90deg, ${GOLD} 0%, ${GOLD_LIGHT} 100%)`,
 										}}
 									/>
@@ -411,7 +411,7 @@ const ReliefBeat: React.FC<{text: string; image: string}> = ({text, image}) => {
 					zIndex: 1,
 					fontFamily: SANS,
 					fontWeight: 800,
-					fontSize: 48,
+					fontSize: 56,
 					color: CREAM,
 					textAlign: 'center',
 					opacity: in_,
@@ -433,7 +433,7 @@ const ValueBeat: React.FC<{text: string}> = ({text}) => {
 			<AmbientTexture frame={frame} />
 			<GoldGlow opacity={0.6} frame={frame} />
 			<div style={{textAlign: 'center', padding: '0 90px', opacity: in_, transform: `scale(${0.88 + in_ * 0.12})`}}>
-				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 44, lineHeight: 1.32, color: CREAM}}>{text}</div>
+				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 52, lineHeight: 1.28, color: CREAM}}>{text}</div>
 				<div style={{width: 90, height: 3, background: GOLD, margin: '30px auto 0', borderRadius: 2, boxShadow: `0 0 14px ${GOLD}`}} />
 			</div>
 		</AbsoluteFill>
@@ -460,13 +460,13 @@ const ServiceBeat: React.FC<{title: string; price: string; items: string[]}> = (
 					marginBottom: 30,
 				}}
 			>
-				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 17, letterSpacing: 3, color: GOLD, marginBottom: 14}}>{title}</div>
+				<div style={{fontFamily: SANS, fontWeight: 800, fontSize: 19, letterSpacing: 3, color: GOLD, marginBottom: 14}}>{title}</div>
 				<div
 					style={{
 						display: 'inline-block',
 						fontFamily: SANS,
 						fontWeight: 800,
-						fontSize: 44,
+						fontSize: 52,
 						color: CREAM,
 						opacity: priceIn,
 						transform: `scale(${0.9 + priceIn * 0.1})`,
@@ -476,7 +476,7 @@ const ServiceBeat: React.FC<{title: string; price: string; items: string[]}> = (
 				</div>
 			</div>
 
-			<div style={{width: 680, display: 'flex', flexDirection: 'column', gap: 14}}>
+			<div style={{width: 740, display: 'flex', flexDirection: 'column', gap: 16}}>
 				{items.map((item, i) => {
 					const delay = 20 + i * 9;
 					const rowIn = spring({frame: frame - delay, fps, from: 0, to: 1, config: {damping: 15, mass: 0.6}});
@@ -487,8 +487,8 @@ const ServiceBeat: React.FC<{title: string; price: string; items: string[]}> = (
 								display: 'flex',
 								flexDirection: 'row',
 								alignItems: 'center',
-								gap: 16,
-								padding: '15px 24px',
+								gap: 18,
+								padding: '17px 26px',
 								borderRadius: 12,
 								background: `${CREAM}0a`,
 								border: `1px solid ${GOLD}33`,
@@ -496,10 +496,10 @@ const ServiceBeat: React.FC<{title: string; price: string; items: string[]}> = (
 								transform: `translateX(${(1 - rowIn) * -22}px)`,
 							}}
 						>
-							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{flexShrink: 0}}>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{flexShrink: 0}}>
 								<path d="M4 12.5L9.5 18L20 6" stroke={GOLD} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
 							</svg>
-							<span style={{fontFamily: SANS, fontWeight: 600, fontSize: 22, color: CREAM}}>{item}</span>
+							<span style={{fontFamily: SANS, fontWeight: 600, fontSize: 26, color: CREAM}}>{item}</span>
 						</div>
 					);
 				})}
@@ -519,7 +519,7 @@ const FreeToolsBeat: React.FC<{text: string}> = ({text}) => {
 			<AmbientTexture frame={frame} />
 			<GoldGlow opacity={0.5} frame={frame} />
 
-			<div style={{position: 'relative', zIndex: 1, fontFamily: SANS, fontWeight: 700, fontSize: 16, letterSpacing: 4, color: GOLD, marginBottom: 26}}>
+			<div style={{position: 'relative', zIndex: 1, fontFamily: SANS, fontWeight: 700, fontSize: 18, letterSpacing: 4, color: GOLD, marginBottom: 26}}>
 				NOT READY TO TALK YET?
 			</div>
 
@@ -530,8 +530,8 @@ const FreeToolsBeat: React.FC<{text: string}> = ({text}) => {
 						<div
 							key={tool}
 							style={{
-								padding: '20px 22px',
-								width: 190,
+								padding: '22px 20px',
+								width: 210,
 								borderRadius: 14,
 								background: `${CREAM}0a`,
 								border: `1px solid ${GOLD}33`,
@@ -540,7 +540,7 @@ const FreeToolsBeat: React.FC<{text: string}> = ({text}) => {
 								transform: `translateY(${(1 - toolIn) * 20}px)`,
 							}}
 						>
-							<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 20, color: CREAM}}>{tool}</span>
+							<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 24, color: CREAM}}>{tool}</span>
 						</div>
 					);
 				})}
@@ -549,12 +549,12 @@ const FreeToolsBeat: React.FC<{text: string}> = ({text}) => {
 			<div
 				style={{
 					textAlign: 'center',
-					padding: '0 100px',
+					padding: '0 90px',
 					opacity: in_,
 					transform: `translateY(${(1 - in_) * 14}px)`,
 				}}
 			>
-				<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 26, color: CREAM}}>{text}</span>
+				<span style={{fontFamily: SANS, fontWeight: 700, fontSize: 30, color: CREAM}}>{text}</span>
 			</div>
 		</AbsoluteFill>
 	);
@@ -578,8 +578,8 @@ const LogoBeat: React.FC<{brand: string; tagline: string; cta: string; contact?:
 			<AmbientTexture frame={frame} />
 			<GoldGlow frame={frame} />
 			<div style={{opacity: logoOpacity, transform: `scale(${logoIn})`, textAlign: 'center', position: 'relative', overflow: 'hidden'}}>
-				<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 68, color: CREAM, letterSpacing: 0.5}}>New</span>
-				<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 68, color: GOLD, letterSpacing: 0.5}}>{rest}</span>
+				<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 80, color: CREAM, letterSpacing: 0.5}}>New</span>
+				<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 80, color: GOLD, letterSpacing: 0.5}}>{rest}</span>
 				<div
 					style={{
 						position: 'absolute',
@@ -598,7 +598,7 @@ const LogoBeat: React.FC<{brand: string; tagline: string; cta: string; contact?:
 					marginTop: 26,
 					fontFamily: SANS,
 					fontWeight: 600,
-					fontSize: 24,
+					fontSize: 28,
 					color: `${CREAM}cc`,
 					textAlign: 'center',
 					padding: '0 100px',
@@ -611,7 +611,7 @@ const LogoBeat: React.FC<{brand: string; tagline: string; cta: string; contact?:
 			<div
 				style={{
 					marginTop: 42,
-					padding: '17px 40px',
+					padding: '20px 48px',
 					borderRadius: 999,
 					background: GOLD,
 					opacity: ctaIn,
@@ -619,10 +619,10 @@ const LogoBeat: React.FC<{brand: string; tagline: string; cta: string; contact?:
 					boxShadow: `0 0 30px ${GOLD}66`,
 				}}
 			>
-				<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 25, color: NAVY_DEEP}}>{cta}</span>
+				<span style={{fontFamily: SANS, fontWeight: 800, fontSize: 29, color: NAVY_DEEP}}>{cta}</span>
 			</div>
 			{contact ? (
-				<div style={{marginTop: 18, fontFamily: SANS, fontWeight: 600, fontSize: 16, color: `${CREAM}88`, opacity: ctaIn}}>{contact}</div>
+				<div style={{marginTop: 18, fontFamily: SANS, fontWeight: 600, fontSize: 18, color: `${CREAM}88`, opacity: ctaIn}}>{contact}</div>
 			) : null}
 		</AbsoluteFill>
 	);
