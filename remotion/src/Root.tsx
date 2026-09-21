@@ -26,6 +26,7 @@ import {BookPromoAd, calculateBookPromoMetadata, bookPromoSchema} from './BookPr
 import {Projekt46BikesAd, calculateProjekt46Metadata, projekt46Schema} from './Projekt46BikesAd';
 import {NewFineraAd, calculateNewFineraMetadata, newFineraSchema} from './NewFineraAd';
 import {MomsCommunityAd, calculateMomsCommunityMetadata, momsCommunitySchema} from './MomsCommunityAd';
+import {SunscreenMotionAd, calculateSunscreenMotionMetadata, sunscreenMotionSchema} from './SunscreenMotionAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -605,6 +606,25 @@ export const RemotionRoot: React.FC = () => {
 					musicVolume: 0.5,
 				}}
 				calculateMetadata={calculateMomsCommunityMetadata}
+			/>
+			<Composition
+				id="SunscreenMotionAd"
+				component={SunscreenMotionAd}
+				durationInFrames={10 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={sunscreenMotionSchema}
+				defaultProps={{
+					hookLine: 'Sunscreen that actually disappears.',
+					benefitLine: 'Glides on clear. Weightless. Layers under makeup — zero white cast, zero grease.',
+					brandLine: 'La Roche-Posay Anthelios Invisible Fluid SPF50+',
+					subLine: 'DERMATOLOGIST-TESTED · BROAD-SPECTRUM · RRP $39.99',
+					cta: 'SHOP NOW',
+					link: 'amazon.com.au',
+					music: '',
+				}}
+				calculateMetadata={calculateSunscreenMotionMetadata}
 			/>
 		</>
 	);
