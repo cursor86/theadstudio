@@ -28,6 +28,7 @@ import {NewFineraAd, calculateNewFineraMetadata, newFineraSchema} from './NewFin
 import {MomsCommunityAd, calculateMomsCommunityMetadata, momsCommunitySchema} from './MomsCommunityAd';
 import {SunscreenMotionAd, calculateSunscreenMotionMetadata, sunscreenMotionSchema} from './SunscreenMotionAd';
 import {AffiliateMotionAd, calculateAffiliateMotionMetadata, affiliateMotionSchema} from './AffiliateMotionAd';
+import {AffiliatePhotoAd, calculateAffiliatePhotoMetadata, affiliatePhotoSchema} from './AffiliatePhotoAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -646,6 +647,26 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateAffiliateMotionMetadata}
+			/>
+			<Composition
+				id="AffiliatePhotoAd"
+				component={AffiliatePhotoAd}
+				durationInFrames={10 * FPS}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={affiliatePhotoSchema}
+				defaultProps={{
+					hookLine: 'The smart speaker that runs your whole home.',
+					benefitLine: 'Hands-free control for lights, timers & music — voice-controls your whole smart home setup.',
+					brandLine: 'Amazon Echo Dot (5th Gen) with Clock',
+					subLine: 'BUILT-IN CLOCK · COMPACT DESIGN · HANDS-FREE ALEXA',
+					cta: 'SHOP NOW',
+					link: 'amazon.com.au',
+					productImage: '',
+					music: '',
+				}}
+				calculateMetadata={calculateAffiliatePhotoMetadata}
 			/>
 		</>
 	);
