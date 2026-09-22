@@ -41,6 +41,31 @@ const starburstPoints = (cx: number, cy: number, outerR: number, innerR: number,
 	return pts.join(' ');
 };
 
+const CheckIcon: React.FC<{size?: number}> = ({size = 64}) => (
+	<div
+		style={{
+			width: size,
+			height: size,
+			borderRadius: '50%',
+			backgroundColor: CREAM,
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
+			flexShrink: 0,
+		}}
+	>
+		<svg width={size * 0.46} height={size * 0.46} viewBox="0 0 24 24" fill="none">
+			<path
+				d="M4 12.5L9.5 18L20 6"
+				stroke={ORANGE}
+				strokeWidth={3.2}
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	</div>
+);
+
 const StarburstBadge: React.FC<{text: string; style?: React.CSSProperties}> = ({text, style}) => (
 	<div style={{position: 'absolute', width: 320, height: 320, ...style}}>
 		<svg width={320} height={320} viewBox="0 0 200 200" style={{position: 'absolute', inset: 0}}>
@@ -69,6 +94,12 @@ const StarburstBadge: React.FC<{text: string; style?: React.CSSProperties}> = ({
 );
 
 export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, subLine, discount, cta, link, productImage}) => {
+	const features = subLine
+		.split('·')
+		.map((f) => f.trim())
+		.filter(Boolean)
+		.slice(0, 3);
+
 	return (
 		<AbsoluteFill style={{backgroundColor: INK, fontFamily: 'Arial, sans-serif'}}>
 			<AbsoluteFill
@@ -165,38 +196,81 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 				) : null}
 			</div>
 
-			{/* Brand + tagline footer */}
+			{/* Brand name */}
 			<div
 				style={{
 					position: 'absolute',
-					top: 1640,
+					top: 1560,
 					left: 50,
 					right: 50,
 					textAlign: 'center',
 				}}
 			>
-				<div style={{fontWeight: 800, fontSize: 50, color: CREAM, letterSpacing: 1}}>{brandLine}</div>
-				<div style={{marginTop: 12, fontWeight: 600, fontSize: 25, color: `${CREAM}bb`}}>{subLine}</div>
+				<div style={{fontWeight: 800, fontSize: 46, color: CREAM, letterSpacing: 1}}>{brandLine}</div>
 			</div>
 
-			{/* CTA + discount, kept minimal */}
+			{/* Feature icon row, in the spirit of the Audible-style icon+label strip */}
 			<div
 				style={{
 					position: 'absolute',
-					top: 1830,
-					left: 0,
-					right: 0,
+					top: 1636,
+					left: 50,
+					right: 50,
 					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					gap: 10,
+					flexDirection: 'row',
+					justifyContent: features.length > 1 ? 'space-between' : 'center',
+					gap: 20,
 				}}
 			>
-				<div style={{display: 'flex', alignItems: 'center', gap: 14}}>
-					<span style={{fontWeight: 700, fontSize: 24, color: ORANGE_LIGHT, letterSpacing: 1}}>{cta}</span>
-					<span style={{fontWeight: 600, fontSize: 24, color: `${CREAM}88`}}>&middot;</span>
-					<span style={{fontWeight: 600, fontSize: 24, color: `${CREAM}88`}}>{link}</span>
+				{features.map((feature) => (
+					<div
+						key={feature}
+						style={{
+							flex: features.length > 1 ? 1 : undefined,
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center',
+							gap: 8,
+						}}
+					>
+						<CheckIcon size={62} />
+						<span
+							style={{
+								fontWeight: 700,
+								fontSize: 16,
+								lineHeight: 1.25,
+								textAlign: 'center',
+								color: `${CREAM}dd`,
+								textTransform: 'uppercase',
+								letterSpacing: 0.3,
+							}}
+						>
+							{feature}
+						</span>
+					</div>
+				))}
+			</div>
+
+			{/* Bold pill CTA button */}
+			<div style={{position: 'absolute', top: 1770, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						gap: 12,
+						backgroundColor: ORANGE,
+						borderRadius: 999,
+						padding: '20px 52px',
+						boxShadow: '0 12px 24px rgba(242,112,28,0.35)',
+					}}
+				>
+					<span style={{fontWeight: 800, fontSize: 28, color: CREAM, letterSpacing: 0.5}}>{cta}</span>
+					<span style={{fontWeight: 800, fontSize: 28, color: CREAM}}>&rarr;</span>
 				</div>
+			</div>
+
+			<div style={{position: 'absolute', top: 1858, left: 0, right: 0, textAlign: 'center'}}>
+				<span style={{fontWeight: 600, fontSize: 20, color: `${CREAM}88`}}>{link}</span>
 			</div>
 		</AbsoluteFill>
 	);
