@@ -203,13 +203,23 @@ const CtaBeat: React.FC<{brandLine: string; subLine: string; cta: string; link: 
 	const photoIn = spring({frame, fps, from: 0, to: 1, config: {damping: 13, mass: 0.6}});
 
 	return (
-		<AbsoluteFill style={{backgroundColor: INK, alignItems: 'center', justifyContent: 'center'}}>
+		<AbsoluteFill style={{backgroundColor: INK, alignItems: 'center', justifyContent: 'center', overflow: 'hidden'}}>
+			<AbsoluteFill
+				style={{
+					background: `radial-gradient(ellipse at 50% 38%, #5A2C0E 0%, ${INK} 68%)`,
+				}}
+			/>
+			<AbsoluteFill
+				style={{
+					background: `radial-gradient(ellipse at 50% 30%, ${ORANGE}44 0%, transparent 55%)`,
+				}}
+			/>
 			<Grain />
 			<div
 				style={{
-					width: 170,
-					height: 170,
-					borderRadius: 28,
+					width: 210,
+					height: 210,
+					borderRadius: 32,
 					background: CREAM,
 					overflow: 'hidden',
 					display: 'flex',
@@ -218,10 +228,10 @@ const CtaBeat: React.FC<{brandLine: string; subLine: string; cta: string; link: 
 					marginBottom: 30,
 					opacity: photoIn,
 					transform: `scale(${photoIn})`,
-					boxShadow: `0 0 0 3px ${ORANGE}`,
+					boxShadow: `0 0 0 3px ${ORANGE}, 0 20px 40px rgba(0,0,0,0.4)`,
 				}}
 			>
-				<Img src={productImage} style={{width: '100%', height: '100%', objectFit: 'contain', padding: 12}} />
+				<Img src={productImage} style={{width: '100%', height: '100%', objectFit: 'contain', padding: 16}} />
 			</div>
 			<div
 				style={{
