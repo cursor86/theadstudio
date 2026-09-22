@@ -29,6 +29,7 @@ import {MomsCommunityAd, calculateMomsCommunityMetadata, momsCommunitySchema} fr
 import {SunscreenMotionAd, calculateSunscreenMotionMetadata, sunscreenMotionSchema} from './SunscreenMotionAd';
 import {AffiliateMotionAd, calculateAffiliateMotionMetadata, affiliateMotionSchema} from './AffiliateMotionAd';
 import {AffiliatePhotoAd, calculateAffiliatePhotoMetadata, affiliatePhotoSchema} from './AffiliatePhotoAd';
+import {CatalogueAd, calculateCatalogueAdMetadata, catalogueAdSchema} from './CatalogueAd';
 import {FPS, HEIGHT, WIDTH} from './constants';
 
 export const RemotionRoot: React.FC = () => {
@@ -667,6 +668,28 @@ export const RemotionRoot: React.FC = () => {
 					music: '',
 				}}
 				calculateMetadata={calculateAffiliatePhotoMetadata}
+			/>
+			<Composition
+				id="CatalogueAd"
+				component={CatalogueAd}
+				durationInFrames={1}
+				fps={FPS}
+				width={WIDTH}
+				height={HEIGHT}
+				schema={catalogueAdSchema}
+				defaultProps={{
+					brandLine: 'OXO Good Grips 10-Piece POP Container Set',
+					features: [
+						'Airtight push-button seal keeps pantry staples fresh',
+						'Stackable, space-efficient design',
+						'Dishwasher safe and BPA-free',
+					],
+					discount: 'GREAT VALUE',
+					cta: 'SHOP NOW',
+					link: 'amazon.com.au',
+					productImage: '',
+				}}
+				calculateMetadata={calculateCatalogueAdMetadata}
 			/>
 		</>
 	);
