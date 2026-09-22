@@ -65,37 +65,54 @@ const HookBeat: React.FC<{hookLine: string; benefitLine: string; productImage: s
 	const {fps, durationInFrames} = useVideoConfig();
 	const words = hookLine.split(' ');
 	const benefitIn = spring({frame: frame - 34, fps, from: 0, to: 1, config: {damping: 15, mass: 0.6}});
-	const zoom = interpolate(frame, [0, durationInFrames], [1, 1.14], {extrapolateRight: 'clamp'});
-	const panX = interpolate(frame, [0, durationInFrames], [0, -18], {extrapolateRight: 'clamp'});
+	const zoom = interpolate(frame, [0, durationInFrames], [1.02, 1.14], {extrapolateRight: 'clamp'});
+	const panY = interpolate(frame, [0, durationInFrames], [0, -14], {extrapolateRight: 'clamp'});
+	const bgZoom = interpolate(frame, [0, durationInFrames], [1.15, 1.3], {extrapolateRight: 'clamp'});
+
+	const PHOTO_HEIGHT = '66%';
 
 	return (
 		<AbsoluteFill style={{backgroundColor: CREAM}}>
-			<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', top: 0, height: '58%'}}>
-				<div style={{width: '100%', height: '100%', overflow: 'hidden', position: 'relative'}}>
+			<AbsoluteFill style={{top: 0, height: PHOTO_HEIGHT, overflow: 'hidden'}}>
+				<AbsoluteFill>
 					<Img
 						src={productImage}
 						style={{
 							width: '100%',
 							height: '100%',
-							objectFit: 'contain',
-							transform: `scale(${zoom}) translateX(${panX}px)`,
+							objectFit: 'cover',
+							filter: 'blur(30px) brightness(0.92)',
+							transform: `scale(${bgZoom})`,
 						}}
 					/>
-					<div
+					<AbsoluteFill style={{backgroundColor: `${CREAM}55`}} />
+				</AbsoluteFill>
+				<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+					<Img
+						src={productImage}
 						style={{
-							position: 'absolute',
-							bottom: 0,
-							left: 0,
-							right: 0,
-							height: '35%',
-							background: `linear-gradient(to bottom, transparent, ${CREAM})`,
+							width: '92%',
+							height: '92%',
+							objectFit: 'contain',
+							filter: 'drop-shadow(0 18px 30px rgba(0,0,0,0.18))',
+							transform: `scale(${zoom}) translateY(${panY}px)`,
 						}}
 					/>
-				</div>
+				</AbsoluteFill>
+				<div
+					style={{
+						position: 'absolute',
+						bottom: 0,
+						left: 0,
+						right: 0,
+						height: '18%',
+						background: `linear-gradient(to bottom, transparent, ${CREAM})`,
+					}}
+				/>
 			</AbsoluteFill>
 			<Grain />
-			<AbsoluteFill style={{alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 110}}>
-				<div style={{width: 940, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24}}>
+			<AbsoluteFill style={{alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 90}}>
+				<div style={{width: 940, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22}}>
 					<div
 						style={{
 							fontFamily: 'Arial, sans-serif',
