@@ -42,8 +42,8 @@ const starburstPoints = (cx: number, cy: number, outerR: number, innerR: number,
 };
 
 const StarburstBadge: React.FC<{text: string; style?: React.CSSProperties}> = ({text, style}) => (
-	<div style={{position: 'absolute', width: 240, height: 240, ...style}}>
-		<svg width={240} height={240} viewBox="0 0 200 200" style={{position: 'absolute', inset: 0}}>
+	<div style={{position: 'absolute', width: 320, height: 320, ...style}}>
+		<svg width={320} height={320} viewBox="0 0 200 200" style={{position: 'absolute', inset: 0}}>
 			<polygon
 				points={starburstPoints(100, 100, 100, 82, 14)}
 				fill={ORANGE_LIGHT}
@@ -60,10 +60,10 @@ const StarburstBadge: React.FC<{text: string; style?: React.CSSProperties}> = ({
 				alignItems: 'center',
 				justifyContent: 'center',
 				textAlign: 'center',
-				padding: 20,
+				padding: 26,
 			}}
 		>
-			<span style={{fontWeight: 800, fontSize: 34, lineHeight: 1.05, color: INK}}>{text}</span>
+			<span style={{fontWeight: 800, fontSize: 44, lineHeight: 1.05, color: INK}}>{text}</span>
 		</div>
 	</div>
 );
@@ -77,14 +77,14 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 				}}
 			/>
 
-			<SparkleIcon size={44} style={{position: 'absolute', top: 430, left: 110}} />
-			<SparkleIcon size={26} style={{position: 'absolute', top: 560, right: 140}} />
+			<SparkleIcon size={40} style={{position: 'absolute', top: 210, left: 90}} />
+			<SparkleIcon size={26} style={{position: 'absolute', top: 300, right: 110}} />
 
 			{/* Headline */}
 			<div
 				style={{
 					position: 'absolute',
-					top: 110,
+					top: 60,
 					left: 80,
 					right: 80,
 					textAlign: 'center',
@@ -93,8 +93,8 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 				<div
 					style={{
 						fontWeight: 800,
-						fontSize: 40,
-						lineHeight: 1.3,
+						fontSize: 36,
+						lineHeight: 1.25,
 						color: CREAM,
 						letterSpacing: 0.5,
 						textTransform: 'uppercase',
@@ -104,16 +104,16 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 				</div>
 			</div>
 
-			{/* Product with reflection */}
-			<div style={{position: 'absolute', top: 640, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
-				<div style={{position: 'relative', width: 640, height: 640}}>
+			{/* Product with reflection - large, the focal point of the ad */}
+			<div style={{position: 'absolute', top: 220, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+				<div style={{position: 'relative', width: 1120, height: 1120}}>
 					<Img
 						src={productImage}
 						style={{
 							width: '100%',
 							height: '100%',
 							objectFit: 'contain',
-							filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))',
+							filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.5))',
 							maskImage: 'radial-gradient(ellipse 60% 58% at 50% 46%, black 30%, transparent 92%)',
 							WebkitMaskImage: 'radial-gradient(ellipse 60% 58% at 50% 46%, black 30%, transparent 92%)',
 						}}
@@ -124,9 +124,9 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 							top: '100%',
 							left: 0,
 							width: '100%',
-							height: '55%',
+							height: '18%',
 							overflow: 'hidden',
-							opacity: 0.28,
+							opacity: 0.18,
 							maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.9), transparent)',
 							WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.9), transparent)',
 						}}
@@ -134,8 +134,8 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 						<Img
 							src={productImage}
 							style={{
-								width: 640,
-								height: 640,
+								width: 1120,
+								height: 1120,
 								objectFit: 'contain',
 								transform: 'scaleY(-1)',
 							}}
@@ -145,7 +145,7 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 				{discount ? (
 					<StarburstBadge
 						text={discount}
-						style={{left: '50%', top: 520, transform: 'translateX(-190px) rotate(-12deg)'}}
+						style={{left: '50%', top: 800, transform: 'translateX(-260px) rotate(-12deg)'}}
 					/>
 				) : null}
 			</div>
@@ -154,21 +154,21 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 			<div
 				style={{
 					position: 'absolute',
-					bottom: 200,
+					top: 1600,
 					left: 80,
 					right: 80,
 					textAlign: 'center',
 				}}
 			>
-				<div style={{fontWeight: 800, fontSize: 58, color: CREAM, letterSpacing: 1}}>{brandLine}</div>
-				<div style={{marginTop: 14, fontWeight: 600, fontSize: 28, color: `${CREAM}bb`}}>{subLine}</div>
+				<div style={{fontWeight: 800, fontSize: 52, color: CREAM, letterSpacing: 1}}>{brandLine}</div>
+				<div style={{marginTop: 14, fontWeight: 600, fontSize: 26, color: `${CREAM}bb`}}>{subLine}</div>
 			</div>
 
 			{/* CTA + discount, kept minimal */}
 			<div
 				style={{
 					position: 'absolute',
-					bottom: 90,
+					top: 1810,
 					left: 0,
 					right: 0,
 					display: 'flex',
