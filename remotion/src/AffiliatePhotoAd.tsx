@@ -74,6 +74,7 @@ const HookBeat: React.FC<{hookLine: string; benefitLine: string; productImage: s
 	return (
 		<AbsoluteFill style={{backgroundColor: CREAM}}>
 			<AbsoluteFill style={{top: 0, height: PHOTO_HEIGHT, overflow: 'hidden'}}>
+				<AbsoluteFill style={{background: `linear-gradient(135deg, ${ORANGE_LIGHT} 0%, ${ORANGE} 55%, #C24E0E 100%)`}} />
 				<AbsoluteFill>
 					<Img
 						src={productImage}
@@ -81,20 +82,37 @@ const HookBeat: React.FC<{hookLine: string; benefitLine: string; productImage: s
 							width: '100%',
 							height: '100%',
 							objectFit: 'cover',
-							filter: 'blur(30px) brightness(0.92)',
+							filter: 'blur(36px) saturate(1.5)',
+							opacity: 0.55,
+							mixBlendMode: 'soft-light',
 							transform: `scale(${bgZoom})`,
 						}}
 					/>
-					<AbsoluteFill style={{backgroundColor: `${CREAM}55`}} />
+				</AbsoluteFill>
+				<AbsoluteFill
+					style={{
+						background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 62%)',
+					}}
+				/>
+				<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
+					<div
+						style={{
+							width: '78%',
+							height: '78%',
+							borderRadius: 32,
+							backgroundColor: CREAM,
+							boxShadow: '0 30px 60px rgba(0,0,0,0.25)',
+						}}
+					/>
 				</AbsoluteFill>
 				<AbsoluteFill style={{alignItems: 'center', justifyContent: 'center'}}>
 					<Img
 						src={productImage}
 						style={{
-							width: '92%',
-							height: '92%',
+							width: '70%',
+							height: '70%',
 							objectFit: 'contain',
-							filter: 'drop-shadow(0 18px 30px rgba(0,0,0,0.18))',
+							filter: 'drop-shadow(0 14px 22px rgba(0,0,0,0.16))',
 							transform: `scale(${zoom}) translateY(${panY}px)`,
 						}}
 					/>
@@ -105,7 +123,7 @@ const HookBeat: React.FC<{hookLine: string; benefitLine: string; productImage: s
 						bottom: 0,
 						left: 0,
 						right: 0,
-						height: '18%',
+						height: '16%',
 						background: `linear-gradient(to bottom, transparent, ${CREAM})`,
 					}}
 				/>
