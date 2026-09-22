@@ -81,11 +81,11 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 			<SparkleIcon size={26} style={{position: 'absolute', top: 300, right: 80}} />
 
 			{/* Kicker */}
-			<div style={{position: 'absolute', top: 32, left: 0, right: 0, textAlign: 'center'}}>
+			<div style={{position: 'absolute', top: 20, left: 0, right: 0, textAlign: 'center'}}>
 				<span
 					style={{
 						fontWeight: 700,
-						fontSize: 22,
+						fontSize: 26,
 						letterSpacing: 5,
 						color: ORANGE_LIGHT,
 						textTransform: 'uppercase',
@@ -99,17 +99,17 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 			<div
 				style={{
 					position: 'absolute',
-					top: 80,
-					left: 50,
-					right: 50,
+					top: 62,
+					left: 40,
+					right: 40,
 					textAlign: 'center',
 				}}
 			>
 				<div
 					style={{
 						fontWeight: 800,
-						fontSize: 34,
-						lineHeight: 1.2,
+						fontSize: 44,
+						lineHeight: 1.15,
 						color: CREAM,
 						letterSpacing: 0.5,
 						textTransform: 'uppercase',
