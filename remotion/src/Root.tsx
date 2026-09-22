@@ -681,7 +681,7 @@ export const RemotionRoot: React.FC = () => {
 					hookLine: 'Keep your pantry fresh, organized, and stress-free.',
 					brandLine: 'OXO Good Grips 10-Piece POP Container Set',
 					subLine: 'AIRTIGHT SEAL · STACKABLE DESIGN · DISHWASHER SAFE',
-					discount: 'Up to 15% OFF',
+					discount: '',
 					cta: 'SHOP NOW',
 					link: 'amazon.com.au',
 					productImage: '',
