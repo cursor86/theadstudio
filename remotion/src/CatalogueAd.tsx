@@ -19,7 +19,7 @@ export const catalogueAdSchema = z.object({
 
 export type CatalogueAdProps = z.infer<typeof catalogueAdSchema>;
 
-const INK = '#1F1B16';
+const INK = '#121317';
 const CREAM = '#FBF7F0';
 const ORANGE = '#F2701C';
 const ORANGE_LIGHT = '#FFA35C';
@@ -73,20 +73,35 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 		<AbsoluteFill style={{backgroundColor: INK, fontFamily: 'Arial, sans-serif'}}>
 			<AbsoluteFill
 				style={{
-					background: `radial-gradient(ellipse at 50% 30%, ${ORANGE}33 0%, transparent 60%)`,
+					background: 'radial-gradient(ellipse at 50% 25%, rgba(255,255,255,0.07) 0%, transparent 55%)',
 				}}
 			/>
 
-			<SparkleIcon size={40} style={{position: 'absolute', top: 210, left: 90}} />
-			<SparkleIcon size={26} style={{position: 'absolute', top: 300, right: 110}} />
+			<SparkleIcon size={40} style={{position: 'absolute', top: 210, left: 60}} />
+			<SparkleIcon size={26} style={{position: 'absolute', top: 300, right: 80}} />
+
+			{/* Kicker */}
+			<div style={{position: 'absolute', top: 32, left: 0, right: 0, textAlign: 'center'}}>
+				<span
+					style={{
+						fontWeight: 700,
+						fontSize: 22,
+						letterSpacing: 5,
+						color: ORANGE_LIGHT,
+						textTransform: 'uppercase',
+					}}
+				>
+					Amazon Finds
+				</span>
+			</div>
 
 			{/* Headline */}
 			<div
 				style={{
 					position: 'absolute',
-					top: 60,
-					left: 80,
-					right: 80,
+					top: 90,
+					left: 50,
+					right: 50,
 					textAlign: 'center',
 				}}
 			>
@@ -105,7 +120,7 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 			</div>
 
 			{/* Product with reflection - large, the focal point of the ad */}
-			<div style={{position: 'absolute', top: 220, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+			<div style={{position: 'absolute', top: 240, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
 				<div style={{position: 'relative', width: 1120, height: 1120}}>
 					<Img
 						src={productImage}
@@ -154,9 +169,9 @@ export const CatalogueAd: React.FC<CatalogueAdProps> = ({hookLine, brandLine, su
 			<div
 				style={{
 					position: 'absolute',
-					top: 1600,
-					left: 80,
-					right: 80,
+					top: 1610,
+					left: 50,
+					right: 50,
 					textAlign: 'center',
 				}}
 			>
